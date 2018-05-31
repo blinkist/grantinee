@@ -9,9 +9,9 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Paweł Komarnicki"]
   spec.email         = ["pawel@blinkist.com"]
 
-  spec.summary       = %q{TODO: Write a short summary, because RubyGems requires one.}
-  spec.description   = %q{TODO: Write a longer description or delete this line.}
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.summary       = %q{"Your permissions, freshly baked!" | A library to manage your database permissions for MySQL and Postgres}
+  spec.description   = %q{A Ruby library to manage your database permissions for MySQL and PostgreSQL. Supports per-table, and per-column permissions for granular access and security.}
+  spec.homepage      = "https://github.com/blinkist/grantinee"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
