@@ -22,7 +22,23 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+You can use the DSL to quickly set up your permissions:
+
+```ruby
+Grantinee.on "database_name", mode: :mysql do
+  # User on any host
+  user :username do
+    select :users, [ :id, :anonymized ]
+    select :lists_users
+  end
+
+  # Or specify the host
+  user "username@%" do
+    insert :users
+    update :users, [ :id, :anonymized ]
+  end
+end
+```
 
 ## Development
 

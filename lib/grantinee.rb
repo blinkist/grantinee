@@ -1,63 +1,96 @@
 require "awesome_print"
-
-# module Grantinee
-#
-#   def self.on(name, &block)
-#     Grantinee::Database.new(name, &block).build_permission
-#   end
-#
-# end
+require "mysql2"
+require "pg"
 
 module Grantinee
   class << self
 
+    # Define database and mode
     def on(database, mode:, &block)
       @database = database
-      @users = []
+      @mode     = mode
 
       instance_eval(&block) if block_given?
+    end
 
-      @users = @users.flat_map do |user|
-        user.map { |p| p.merge({ database: database }) }
+    # Define user and host
+    # Note: revokes permissions for given user
+    def user(user, &block)
+      @user, @host   = user.to_s.split '@'
+      @host        ||= '%'
+
+      revoke_permissions!
+      instance_eval(&block) if block_given?
+    end
+
+    # Run specific grants
+    %w{ select insert update }.each do |kind|
+      define_method(kind.to_sym) do |table, fields=[]|
+        grant_permission kind: kind, table: table, fields: fields
       end
     end
 
 
-    def user(user, &block)
-      @permissions = []
+    private
 
-      instance_eval(&block) if block_given?
+    # Revoke permissions for specific @user
+    def revoke_permissions!
+      data = {
+        user: @user
+      }
 
-      @users << @permissions.map { |p| p.merge({ user: user }) }
-    end
-
-
-    def select(table, fields=[])
-      @permissions << { kind: 'select', table: table, fields: fields }
-    end
-
-    def insert(table, fields=[])
-      @permissions << { kind: 'insert', table: table, fields: fields }
-    end
-
-    def update(table, fields=[])
-      @permissions << { kind: 'update', table: table, fields: fields }
-    end
-
-
-    def format_permission
-      case @mode
+      query = case @mode.to_s
       when 'mysql'
+        query = "REVOKE ALL PRIVILEGES, GRANT OPTION FROM %{user}" % data
+        ap query
 
       when 'postgres'
+        query = "REVOKE ALL PRIVILEGES FROM %{user};" % data
+        ap query
+
       else
         raise "Mode not supported"
       end
+
+      results = client.query query
     end
+
+    # Grant specific permission
+    def grant_permission(kind:, table:, fields:)
+      data = {
+        database: @database,
+        user:     @user,
+        host:     @host,
+        kind:     kind,
+        table:    table,
+        fields:   fields.join(', ')
+      }
+
+      query = case @mode.to_s
+      when 'mysql'
+        client = Mysql2::Client.new username: 'root', password: 'mysql'
+
+        query = if data[:fields].empty?
+          "GRANT %{kind} ON %{database}.%{table} TO '%{user}'@'%{host}';"
+        else
+          "GRANT %{kind}(%{fields}) ON %{database}.%{table} TO '%{user}'@'%{host}';"
+        end % data
+
+      when 'postgres'
+        client = PG::Connection.open user: 'postgres', password: 'postgres', host: 'localhost'
+
+        query = if data[:fields].empty?
+          "GRANT %{kind} ON %{table} TO %{user};"
+        else
+          "GRANT %{kind}(%{fields}) ON %{table} TO %{user};"
+        end % data
+
+      else
+        raise "Mode not supported"
+      end
+
+      results = client.query query
+    end
+
   end
 end
-
-# require "grantinee/version"
-# require "grantinee/database"
-# require "grantinee/user"
-# require "grantinee/permission"
