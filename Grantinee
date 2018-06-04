@@ -1,0 +1,13 @@
+on "grantinee_development", :mysql do
+  # User on any host
+  user :username do
+    select :users, [ :id, :anonymized ]
+    select :lists_users
+  end
+
+  # Or specify the host
+  user "username@%" do
+    insert :users
+    update :users, [ :id, :anonymized ]
+  end
+end

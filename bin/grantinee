@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+
+require "bundler/setup"
+require "grantinee"
+
+# Read the DSL commands
+Grantinee::Dsl.eval(File.read('Grantinee'))
