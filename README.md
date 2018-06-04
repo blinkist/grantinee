@@ -25,7 +25,7 @@ Or install it yourself as:
 You can use the DSL to quickly set up your permissions:
 
 ```ruby
-Grantinee.on "database_name", mode: :mysql do
+Grantinee.on "database_name", engine: :mysql do
   # User on any host
   user :username do
     select :users, [ :id, :anonymized ]
