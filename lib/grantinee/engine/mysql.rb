@@ -17,20 +17,24 @@ module Grantinee
 
       def revoke_permissions!(data)
         query = "REVOKE ALL PRIVILEGES, GRANT OPTION FROM %{user}" % data
-        ap query
-        run! query
+        begin
+          run! query
+        rescue Exception => e
+          # MySQL freaks out when there are no grants yet...
+        end
       end
 
       def grant_permission(data)
         query = if data[:fields].empty?
-          "GRANT %{kind} ON %{database}.%{table} TO '%{user}'@'%{host}';"
+          "GRANT %{kind} ON %{table} TO '%{user}'@'%{host}';"
         else
-          "GRANT %{kind}(%{fields}) ON %{database}.%{table} TO '%{user}'@'%{host}';"
+          "GRANT %{kind}(%{fields}) ON %{table} TO '%{user}'@'%{host}';"
         end % data
         run! query
       end
 
       def run!(query)
+        ap query
         return @client.query query
       end
 
