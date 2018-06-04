@@ -32,7 +32,7 @@ module Grantinee
     end
 
     # Define permission grants
-    %w{ usage select insert update }.each do |kind|
+    %w{ all usage select insert update }.each do |kind|
       define_method(kind.to_sym) do |table, fields=[]|
         @engine.grant_permission @data.merge({ kind: kind, table: table, fields: fields.join(', ') })
       end

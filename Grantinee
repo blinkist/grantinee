@@ -4,9 +4,7 @@ on "grantinee_development", :mysql do
     select :users, [ :id, :anonymized ]
     insert :users, [ :anonymized ]
     update :users, [ :anonymized ]
-    
-    select :lists_users
-    insert :lists_users
-    update :lists_users
+
+    all :lists_users
   end
 end
