@@ -12,7 +12,6 @@ module Grantinee
           port:     Grantinee.config.dig(:mysql, :port),
           database: database
         )
-        ap @client
       end
 
       def revoke_permissions!(data)
