@@ -6,12 +6,12 @@ require "pg"
 
 RSpec.describe "Adding permissions" do
   context "when a permissions file exists with defined permissions" do
-    let(:database_name) { "grantinee_client_test" }
+    let(:database) { "grantinee_client_test" }
     let(:service) { "my_service" }
 
     let(:permissions) do
       %(
-        Grantinee.on "#{database_name}", engine: :#{engine} do
+        Grantinee.on "#{database}", engine: :#{engine} do
           # User on any host
           user :#{service} do
             select :users, [ :id, :anonymized ]
@@ -50,7 +50,7 @@ RSpec.describe "Adding permissions" do
           password: nil,
           host:     Grantinee.config.dig(:postgresql, :hostname),
           port:     Grantinee.config.dig(:postgresql, :port),
-          dbname:   database_name
+          dbname:   database
         )
       end
 
@@ -61,12 +61,12 @@ RSpec.describe "Adding permissions" do
           password: "fake_password",
           host:     Grantinee.config.dig(:postgresql, :hostname),
           port:     Grantinee.config.dig(:postgresql, :port),
-          dbname:   database_name
+          dbname:   database
         )
       end
 
       before do
-        pgsql_no_db_admin.exec "CREATE DATABASE #{database_name};"
+        pgsql_no_db_admin.exec "CREATE DATABASE #{database};"
 
         pgsql_admin.exec "CREATE ROLE #{service} NOINHERIT LOGIN PASSWORD 'fake_password';"
         pgsql_admin.exec "DROP TABLE IF EXISTS users;"
@@ -81,7 +81,7 @@ RSpec.describe "Adding permissions" do
         pgsql_admin.exec "DROP ROLE #{service};"
         pgsql_admin.close
 
-        pgsql_no_db_admin.exec "DROP DATABASE #{database_name};"
+        pgsql_no_db_admin.exec "DROP DATABASE #{database};"
         pgsql_no_db_admin.close
       end
 
