@@ -23,7 +23,7 @@ module Grantinee
       end
 
       def revoke_permissions!(data)
-        query = format("REVOKE ALL PRIVILEGES ON DATABASE %{database} FROM %{user};", sanitize(data))
+        query = format "REVOKE ALL PRIVILEGES ON DATABASE %{database} FROM %{user};", sanitize(data)
         run! query
       end
 

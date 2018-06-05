@@ -11,9 +11,6 @@ Lint/ParenthesesAsGroupedExpression:
   Exclude:
     - 'spec/**/*'
 
-Lint/MethodLength:
-  Enabled: false
-
 Lint/HandleExceptions:
   Enabled: false
 
@@ -49,6 +46,9 @@ Layout/EndAlignment:
 Metrics/BlockLength:
   Exclude:
     - "spec/**/*"
+
+Metrics/MethodLength:
+  Enabled: false
 
 Metrics/LineLength:
   Max: 100

@@ -19,7 +19,8 @@ module Grantinee
     attr_accessor :hostname
     attr_accessor :port
     attr_accessor :database
-    attr_accessor :url
+
+    attr_reader :url
 
     # Allow verbose mode
     attr_accessor :verbose

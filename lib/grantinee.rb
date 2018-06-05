@@ -24,11 +24,9 @@ module Grantinee
 
     # Returns configuration
     def configuration
-      if configured?
-        @configuration
-      else
-        raise "Not configured"
-      end
+      raise "Not configured" unless configured?
+
+      @configuration
     end
 
     # Returns true if the library was configured
