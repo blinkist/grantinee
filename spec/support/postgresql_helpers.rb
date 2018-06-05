@@ -1,14 +1,18 @@
 
 # frozen_string_literal: true
 
+require "yaml"
+
 module PostgresqlHelpers
   class Postgresql
     def initialize(user: nil, password: nil, database: nil)
+      configuration = YAML.safe_load(File.read("spec/fixtures/config_postgresql.yml"))
+
       @client = PG::Connection.open(
         user:     user,
         password: password,
-        host:     Grantinee.config.dig(:postgresql, :hostname),
-        port:     Grantinee.config.dig(:postgresql, :port),
+        host:     configuration["hostname"],
+        port:     configuration["port"],
         dbname:   database
       )
     end
