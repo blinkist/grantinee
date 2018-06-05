@@ -26,8 +26,15 @@ if ARGV.index('-v')
   Grantinee.configuration.verbose = true
 end
 
+
+file_name = if (file_name_index = ARGV.index('-f'))
+              ARGV[file_name_index + 1]
+            else
+              "Grantinee"
+            end
+
 # Read the DSL commands and prepare the engine
-parser = Grantinee::Dsl.eval(File.read('Grantinee'))
+parser = Grantinee::Dsl.eval(File.read(file_name))
 engine = Grantinee::Engine.for Grantinee.configuration.engine
 
 # Revoke permissions
