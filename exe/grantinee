@@ -1,0 +1,37 @@
+#!/usr/bin/env ruby
+
+require "bundler/setup"
+require "grantinee"
+
+Grantinee.detect_environment
+
+# Or use bin/grantinee -c config/grantinee.yml to load configuration from a file
+if (config_file_index = ARGV.index('-c'))
+  require 'yaml'
+  config_yaml = YAML.load(File.read(ARGV[config_file_index+1]))
+
+  Grantinee.configure do |c|
+    config_yaml.each do |key, value|
+      if Grantinee::Configuration::SUPPORTED_ARGUMENTS.include?(key.to_s)
+        c.send(:"#{key}=", value)
+      else
+        puts "Warning: Unsupported configuration argument '#{key}'"
+      end
+    end
+  end
+end
+
+# Handle verbose output
+if ARGV.index('-v')
+  Grantinee.configuration.verbose = true
+end
+
+# Read the DSL commands and prepare the engine
+parser = Grantinee::Dsl.eval(File.read('Grantinee'))
+engine = Grantinee::Engine.for Grantinee.configuration.engine
+
+# Revoke permissions
+parser.permissions.each { |data| engine.revoke_permissions!(data) }
+
+# Grant permissions
+parser.permissions.each { |data| engine.grant_permission!(data) }
