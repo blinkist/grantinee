@@ -3,6 +3,8 @@
 require "bundler/setup"
 require "grantinee"
 
+Grantinee.detect_environment
+
 # Or use bin/grantinee -c config/grantinee.yml to load configuration from a file
 if (config_file_index = ARGV.index('-c'))
   require 'yaml'

@@ -6,6 +6,8 @@ module Grantinee
         raise "Engine '#{engine}' is not supported" unless Configuration::SUPPORTED_ENGINES.include?(engine.to_s)
 
         case engine.to_s
+        when 'active_record'
+          ActiveRecord.new
         when 'mysql'
           Mysql.new
         when 'postgresql'

@@ -4,6 +4,16 @@ require 'awesome_print'
 module Grantinee
   class << self
 
+    def detect_environment
+      @configuration = Grantinee::Configuration.new
+
+      if File.exists? 'config/environment.rb'
+        require_relative 'config/environment'
+        return true
+      end
+      false
+    end
+
     # Allow configuration using a block
     def configure
       yield @configuration      = Grantinee::Configuration.new
@@ -21,7 +31,7 @@ module Grantinee
 
     # Returns true if the library was configured
     def configured?
-      @configuration && @configuration.configured
+      @configuration
     end
 
   end
