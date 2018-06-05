@@ -27,7 +27,7 @@ module Grantinee
         query = "REVOKE ALL PRIVILEGES, GRANT OPTION FROM %{user};" % sanitize(data)
         begin
           run! query
-        rescue Exception => e
+        rescue StandardError
           # MySQL freaks out when there are no grants yet...
         end
       end

@@ -11,6 +11,12 @@ Lint/ParenthesesAsGroupedExpression:
   Exclude:
     - 'spec/**/*'
 
+Lint/MethodLength:
+  Enabled: false
+
+Lint/HandleExceptions:
+  Enabled: false
+
 Style/BlockDelimiters:
   Enabled: true
   Exclude:
@@ -35,6 +41,9 @@ Layout/EmptyLinesAroundClassBody:
   Enabled: false
 
 Layout/EmptyLinesAroundModuleBody:
+  Enabled: false
+
+Layout/EndAlignment:
   Enabled: false
 
 Metrics/BlockLength:
