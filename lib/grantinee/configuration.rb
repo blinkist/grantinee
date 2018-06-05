@@ -3,7 +3,7 @@ require 'uri'
 module Grantinee
   class Configuration
     SUPPORTED_ARGUMENTS = %w{ engine username password hostname port database }
-    SUPPORTED_ENGINES   = %w{ active_record mysql postgresql }
+    SUPPORTED_ENGINES   = %w{ mysql postgresql }
 
     # Keeps the information if the library was configured at least once
     attr_accessor :configured
