@@ -4,6 +4,11 @@ module Grantinee
   module Engine
     class Mysql < AbstractEngine
 
+      def sanitize_value(value)
+        @connection.escape value
+      end
+
+
       def initialize
         configuration = Grantinee.configuration
 
@@ -17,7 +22,7 @@ module Grantinee
       end
 
       def revoke_permissions!(data)
-        query = "REVOKE ALL PRIVILEGES, GRANT OPTION FROM %{user}" % data
+        query = "REVOKE ALL PRIVILEGES, GRANT OPTION FROM %{user};" % sanitize(data)
         begin
           run! query
         rescue Exception => e
@@ -30,7 +35,7 @@ module Grantinee
           "GRANT %{kind} ON %{table} TO '%{user}'@'%{host}';"
         else
           "GRANT %{kind}(%{fields}) ON %{table} TO '%{user}'@'%{host}';"
-        end % data
+        end % sanitize(data)
         run! query
       end
 

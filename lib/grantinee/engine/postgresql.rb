@@ -4,6 +4,11 @@ module Grantinee
   module Engine
     class Postgresql < AbstractEngine
 
+      def sanitize_value(value)
+        @connection.escape_string value
+      end
+
+
       def initialize
         configuration = Grantinee.configuration
 
@@ -17,7 +22,7 @@ module Grantinee
       end
 
       def revoke_permissions!(data)
-        query = "REVOKE ALL PRIVILEGES ON DATABASE %{database} FROM %{user};" % data
+        query = "REVOKE ALL PRIVILEGES ON DATABASE %{database} FROM %{user};" % sanitize(data)
         run! query
       end
 
@@ -26,7 +31,7 @@ module Grantinee
           "GRANT %{kind} ON %{table} TO %{user};"
         else
           "GRANT %{kind}(%{fields}) ON TABLE %{table} TO %{user};"
-        end % data
+        end % sanitize(data)
         run! query
       end
 
