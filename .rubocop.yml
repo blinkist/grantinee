@@ -1,6 +1,10 @@
 AllCops:
   Exclude:
     - 'bin/**/*'
+    - "grantinee.gemspec"
+
+Security/Eval:
+  Enabled: false
 
 Lint/ParenthesesAsGroupedExpression:
   Enabled: true
@@ -13,6 +17,9 @@ Style/BlockDelimiters:
     - 'spec/**/*'
 
 Style/Documentation:
+  Enabled: false
+
+Style/FormatStringToken:
   Enabled: false
 
 Style/SignalException:
@@ -33,3 +40,6 @@ Layout/EmptyLinesAroundModuleBody:
 Metrics/BlockLength:
   Exclude:
     - "spec/**/*"
+
+Metrics/LineLength:
+  Max: 100
