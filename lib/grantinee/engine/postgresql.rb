@@ -1,4 +1,5 @@
-require 'pg'
+gem "pg", ">= 0.18", "< 2.0"
+require "pg"
 
 module Grantinee
   module Engine
@@ -36,7 +37,7 @@ module Grantinee
       end
 
       def run!(query)
-        ap query if Grantinee.configuration.verbose
+        puts query if Grantinee.configuration.verbose
         return @connection.exec query
       end
 

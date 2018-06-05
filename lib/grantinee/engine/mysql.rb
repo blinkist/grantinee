@@ -1,4 +1,5 @@
-require 'mysql2'
+gem "mysql2", ">= 0.4.4", "< 0.6.0"
+require "mysql2"
 
 module Grantinee
   module Engine
@@ -40,7 +41,7 @@ module Grantinee
       end
 
       def run!(query)
-        ap query if Grantinee.configuration.verbose
+        puts query if Grantinee.configuration.verbose
         return @connection.query query
       end
 

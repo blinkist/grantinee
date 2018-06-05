@@ -1,5 +1,3 @@
-require 'awesome_print'
-
 # Grantinee module is where the magic at ;-)
 module Grantinee
   class << self
@@ -42,5 +40,3 @@ require 'grantinee/configuration'
 require 'grantinee/dsl'
 require 'grantinee/engine'
 require 'grantinee/engine/abstract_engine'
-require 'grantinee/engine/mysql'
-require 'grantinee/engine/postgresql'

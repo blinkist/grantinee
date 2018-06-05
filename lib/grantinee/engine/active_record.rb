@@ -32,7 +32,7 @@ module Grantinee
       end
 
       def run!(query)
-        ap query if Grantinee.configuration.verbose
+        puts query if Grantinee.configuration.verbose
         return @connection.execute query
       end
 

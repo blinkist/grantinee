@@ -7,11 +7,17 @@ module Grantinee
 
         case engine.to_s
         when 'active_record'
+          require 'grantinee/engine/active_record'
           ActiveRecord.new
+
         when 'mysql'
+          require 'grantinee/engine/mysql'
           Mysql.new
+
         when 'postgresql'
+          require 'grantinee/engine/postgresql'
           Postgresql.new
+
         end
       end
     end
