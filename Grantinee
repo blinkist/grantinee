@@ -1,4 +1,4 @@
-on "grantinee_development", :mysql do
+on "grantinee_development" do
   # User on any host
   user :username do
     select :users, [ :id, :anonymized ]

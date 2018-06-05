@@ -19,5 +19,17 @@ if (config_file_index = ARGV.index('-c'))
   end
 end
 
-# Read the DSL commands
-Grantinee::Dsl.eval(File.read('Grantinee'))
+# Handle verbose output
+if ARGV.index('-v')
+  Grantinee.configuration.verbose = true
+end
+
+# Read the DSL commands and prepare the engine
+parser = Grantinee::Dsl.eval(File.read('Grantinee'))
+engine = Grantinee::Engine.for Grantinee.configuration.engine
+
+# Revoke permissions
+parser.permissions.each { |data| engine.revoke_permissions!(data) }
+
+# Grant permissions
+parser.permissions.each { |data| engine.grant_permission!(data) }

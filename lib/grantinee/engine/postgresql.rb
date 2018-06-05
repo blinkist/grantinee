@@ -26,7 +26,7 @@ module Grantinee
         run! query
       end
 
-      def grant_permission(data)
+      def grant_permission!(data)
         query = if data[:fields].empty?
           "GRANT %{kind} ON %{table} TO %{user};"
         else
@@ -36,7 +36,7 @@ module Grantinee
       end
 
       def run!(query)
-        ap query
+        ap query if Grantinee.configuration.verbose
         return @connection.exec query
       end
 

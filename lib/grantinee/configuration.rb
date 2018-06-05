@@ -19,6 +19,9 @@ module Grantinee
     attr_accessor :database
     attr_accessor :url
 
+    # Allow verbose mode
+    attr_accessor :verbose
+
 
     def initialize
       # Do nothing...

@@ -1,3 +1,4 @@
+# MySQL
 engine:    mysql
 username:  root
 password:  mysql
@@ -6,3 +7,11 @@ port:      3306
 database:  grantinee_development
 
 invalid_param: blabla
+
+# # Postgresql
+# engine: postgresql
+# username: postgres
+# password: postgres
+# hostname: localhost
+# port: 5432
+# database: grantinee_development

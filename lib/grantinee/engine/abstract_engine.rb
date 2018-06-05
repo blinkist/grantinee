@@ -10,7 +10,7 @@ module Grantinee
         raise "Not implemented"
       end
 
-      def grant_permission(data)
+      def grant_permission!(data)
         raise "Not implemented"
       end
 
