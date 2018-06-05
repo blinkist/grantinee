@@ -37,15 +37,30 @@ module PostgresqlHelpers
       @client.exec "DROP ROLE #{role};"
     end
 
+    def create_tables
+      create_users_table
+      create_lists_users_table
+    end
+
     def create_users_table
-      @client.exec "CREATE TABLE users(id VARCHAR(30) PRIMARY KEY, anonymized boolean);"
+      @client.exec "CREATE TABLE users(id VARCHAR(30) PRIMARY KEY, "\
+                   "anonymized boolean, 'email.primary' varchar(30));"
     rescue StandardError
-      drop_users_table
+      drop_table(:users)
       @client.exec "CREATE TABLE users(id VARCHAR(30) PRIMARY KEY, anonymized boolean);"
     end
 
-    def drop_users_table
-      @client.exec "DROP TABLE IF EXISTS users;"
+    def create_lists_users_table
+      @client.exec "CREATE TABLE lists_users(id VARCHAR(30) PRIMARY KEY, "\
+                   "list_name varchar(30), user_id varchar(30));"
+    rescue StandardError
+      drop_table(:lists_users)
+      @client.exec "CREATE TABLE lists_users(id VARCHAR(30) PRIMARY KEY, "\
+                   "list_name varchar(30), user_id varchar(30));"
+    end
+
+    def drop_table(name)
+      @client.exec "DROP TABLE IF EXISTS #{name};"
     end
 
     def create_user_records
