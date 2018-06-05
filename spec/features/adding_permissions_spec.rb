@@ -65,7 +65,7 @@ RSpec.describe "Adding permissions" do
         subject
 
         expect {
-          postgresql_client.exec("SELECT * FROM users;")
+          postgresql_client.exec("SELECT 'email.primary' FROM users;")
         }.to raise_error(PG::InsufficientPrivilege)
       end
     end
