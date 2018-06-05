@@ -19,10 +19,6 @@ RSpec.describe "Adding permissions" do
           # User on any host
           user :#{service} do
             select :users, [ :id, :anonymized ]
-            insert :users, [ :anonymized ]
-            update :users, [ :anonymized ]
-
-            all :lists_users
           end
         end
       )
@@ -71,7 +67,7 @@ RSpec.describe "Adding permissions" do
         subject
 
         expect {
-          postgresql_client.exec("SELECT 'email.primary' FROM users;")
+          postgresql_client.exec("INSERT INTO users(id) VALUES('malicious');")
         }.to raise_error(PG::InsufficientPrivilege)
       end
     end
