@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Grantinee
   module Engine
     class AbstractEngine
@@ -6,7 +8,7 @@ module Grantinee
         raise "Not implemented"
       end
 
-      def revoke_permissions!(data)
+      def revoke_permissions!(_data)
         raise "Not implemented"
       end
 
@@ -14,7 +16,7 @@ module Grantinee
         raise "Not implemented"
       end
 
-      def run!(query)
+      def run!(_query)
         raise "Not implemented"
       end
 

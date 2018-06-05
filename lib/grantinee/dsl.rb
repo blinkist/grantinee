@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Grantinee
   class Dsl
 
@@ -6,7 +8,7 @@ module Grantinee
 
     # Allow evaluation of the code coming from the Grantinee file
     def self.eval(commands)
-      self.new { eval(commands, binding) }
+      new { eval(commands, binding) }
     end
 
     # Initialize defaults and start processing

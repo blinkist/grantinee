@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'awesome_print'
 
 # Grantinee module is where the magic at ;-)

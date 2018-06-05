@@ -1,4 +1,6 @@
 
+# frozen_string_literal: true
+
 module PostgresqlHelpers
   class Postgresql
     def initialize(user: nil, password: nil, database: nil)
