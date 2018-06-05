@@ -9,7 +9,7 @@ module Grantinee
     def detect_environment
       @configuration = Grantinee::Configuration.new
 
-      if File.exists? 'config/environment.rb'
+      if File.exist? 'config/environment.rb'
         require_relative 'config/environment'
         return true
       end

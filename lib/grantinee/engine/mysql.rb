@@ -10,7 +10,6 @@ module Grantinee
         @connection.escape value
       end
 
-
       def initialize
         configuration = Grantinee.configuration
 
@@ -24,7 +23,7 @@ module Grantinee
       end
 
       def revoke_permissions!(data)
-        query = "REVOKE ALL PRIVILEGES, GRANT OPTION FROM %{user};" % sanitize(data)
+        query = format("REVOKE ALL PRIVILEGES, GRANT OPTION FROM %{user};", sanitize(data))
         begin
           run! query
         rescue StandardError
@@ -34,16 +33,16 @@ module Grantinee
 
       def grant_permission!(data)
         query = if data[:fields].empty?
-          "GRANT %{kind} ON %{table} TO '%{user}'@'%{host}';"
-        else
-          "GRANT %{kind}(%{fields}) ON %{table} TO '%{user}'@'%{host}';"
+                  "GRANT %{kind} ON %{table} TO '%{user}'@'%{host}';"
+                else
+                  "GRANT %{kind}(%{fields}) ON %{table} TO '%{user}'@'%{host}';"
         end % sanitize(data)
         run! query
       end
 
       def run!(query)
         ap query if Grantinee.configuration.verbose
-        return @connection.query query
+        @connection.query query
       end
 
     end

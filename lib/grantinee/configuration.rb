@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require 'uri'
 
 module Grantinee
   class Configuration
-    SUPPORTED_ARGUMENTS = %w{ engine username password hostname port database }
-    SUPPORTED_ENGINES   = %w{ active_record mysql postgresql }
+    SUPPORTED_ARGUMENTS = %w[engine username password hostname port database].freeze
+    SUPPORTED_ENGINES   = %w[active_record mysql postgresql].freeze
 
     # Keeps the information if the library was configured at least once
     attr_accessor :configured
@@ -21,7 +23,6 @@ module Grantinee
 
     # Allow verbose mode
     attr_accessor :verbose
-
 
     def initialize
       # Do nothing...

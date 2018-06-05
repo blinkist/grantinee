@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'mysql2'
 
 module Grantinee
@@ -8,13 +10,12 @@ module Grantinee
         value
       end
 
-
       def initialize
         @connection = ActiveRecord::Base.connection
       end
 
       def revoke_permissions!(data)
-        query = [ "REVOKE ALL PRIVILEGES, GRANT OPTION FROM %{user};", data ]
+        query = ["REVOKE ALL PRIVILEGES, GRANT OPTION FROM %{user};", data]
         begin
           run! query
         rescue Exception => e
@@ -24,16 +25,16 @@ module Grantinee
 
       def grant_permission!(data)
         query = if data[:fields].empty?
-          "GRANT %{kind} ON %{table} TO '%{user}'@'%{host}';"
-        else
-          "GRANT %{kind}(%{fields}) ON %{table} TO '%{user}'@'%{host}';"
+                  "GRANT %{kind} ON %{table} TO '%{user}'@'%{host}';"
+                else
+                  "GRANT %{kind}(%{fields}) ON %{table} TO '%{user}'@'%{host}';"
         end
-        run! [ query, data ]
+        run! [query, data]
       end
 
       def run!(query)
         ap query if Grantinee.configuration.verbose
-        return @connection.execute query
+        @connection.execute query
       end
 
     end

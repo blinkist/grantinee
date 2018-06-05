@@ -5,7 +5,6 @@ module Grantinee
 
     attr_accessor :permissions
 
-
     # Allow evaluation of the code coming from the Grantinee file
     def self.eval(commands)
       new { eval(commands, binding) }
@@ -36,13 +35,13 @@ module Grantinee
     end
 
     # Define permission grants
-    %w{ all usage select insert update }.each do |kind|
-      define_method(kind.to_sym) do |table, fields=[]|
-        @permissions << @data.merge({
+    %w[all usage select insert update].each do |kind|
+      define_method(kind.to_sym) do |table, fields = []|
+        @permissions << @data.merge(
           kind:   kind,
           table:  table,
           fields: fields.join(', ')
-        })
+        )
       end
     end
 

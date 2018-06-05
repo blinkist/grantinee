@@ -12,7 +12,7 @@ module Grantinee
         raise "Not implemented"
       end
 
-      def grant_permission!(data)
+      def grant_permission!(_data)
         raise "Not implemented"
       end
 
@@ -31,12 +31,12 @@ module Grantinee
       def sanitize(data)
         data.each do |key, value|
           data[key] = case value
-          when String, Symbol
-            sanitize_value(value.to_s)
-          when Array
-            value.map { |v| sanitize_value(v.to_s) }
-          else
-            raise "Unsupported data type: #{value.class}"
+                      when String, Symbol
+                        sanitize_value(value.to_s)
+                      when Array
+                        value.map { |v| sanitize_value(v.to_s) }
+                      else
+                        raise "Unsupported data type: #{value.class}"
           end
         end
       end
