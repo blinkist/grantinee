@@ -24,11 +24,7 @@ module Grantinee
 
       def revoke_permissions!(data)
         query = "REVOKE ALL PRIVILEGES, GRANT OPTION FROM %{user};" % sanitize(data)
-        begin
-          run! query
-        rescue Exception => e
-          # MySQL freaks out when there are no grants yet...
-        end
+        run! query
       end
 
       def grant_permission!(data)
