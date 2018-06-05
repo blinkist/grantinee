@@ -4,13 +4,15 @@ module Grantinee
   module Engine
     class Mysql < AbstractEngine
 
-      def initialize(database)
-        @client = Mysql2::Client.new(
-          username: Grantinee.config.dig(:mysql, :username),
-          password: Grantinee.config.dig(:mysql, :password),
-          host:     Grantinee.config.dig(:mysql, :hostname),
-          port:     Grantinee.config.dig(:mysql, :port),
-          database: database
+      def initialize
+        configuration = Grantinee.configuration
+
+        @connection = Mysql2::Client.new(
+          username: configuration.username,
+          password: configuration.password,
+          host:     configuration.hostname,
+          port:     configuration.port,
+          database: configuration.database
         )
       end
 
@@ -34,7 +36,7 @@ module Grantinee
 
       def run!(query)
         ap query
-        return @client.query query
+        return @connection.query query
       end
 
     end

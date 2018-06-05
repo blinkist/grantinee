@@ -15,7 +15,7 @@ module Grantinee
 
     # Define database and mode
     def on(database, engine, &block)
-      @engine = Grantinee::Engine.for engine, database
+      @engine = Grantinee::Engine.for engine
       @data[:database] = database
 
       instance_eval(&block) if block_given?

@@ -1,0 +1,8 @@
+engine:    mysql
+username:  root
+password:  mysql
+hostname:  localhost
+port:      3306
+database:  grantinee_development
+
+invalid_param: blabla

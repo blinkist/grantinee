@@ -4,32 +4,31 @@ require 'awesome_print'
 module Grantinee
   class << self
 
-    # Define Grantinee.config and set some defaults
-    # Config should be set using Grantinee.config { ... } or via -c option
-    def config(&block)
-      @config = {
-        mysql: {
-          hostname: 'localhost',
-          port:     3306,
-          username: 'root',
-          password: 'mysql'
-        },
-        postgresql: {
-          hostname: 'localhost',
-          port:     5432,
-          username: 'postgres',
-          password: 'postgres'
-        }
-      }
+    # Allow configuration using a block
+    def configure
+      yield @configuration      = Grantinee::Configuration.new
+      @configuration.configured = true
+    end
 
-      instance_eval(&block) if block_given?
-      return @config
+    # Returns configuration
+    def configuration
+      if configured?
+        @configuration
+      else
+        raise "Not configured"
+      end
+    end
+
+    # Returns true if the library was configured
+    def configured?
+      @configuration && @configuration.configured
     end
 
   end
 end
 
 # Load internal stuffs
+require 'grantinee/configuration'
 require 'grantinee/dsl'
 require 'grantinee/engine'
 require 'grantinee/engine/abstract_engine'

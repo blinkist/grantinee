@@ -1,8 +1,6 @@
 # Grantinee
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/grantinee`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Grantinee is a library to manage your database permissions. It supports MySQL and Postgres, allowing for granular per-table, and per-column permission setting. Tight and explicit permissions, instead of "allow all access" approach, may enhance the data security in your app, and make the GDPR compliance easier for multi-user databases (like when you have a service-oriented architecture).
 
 ## Installation
 
@@ -22,22 +20,68 @@ Or install it yourself as:
 
 ## Usage
 
+Before you start using Grantinee you need to configure it.
+
+### Configure the library
+
+You can specify connection in a block, providing each information separately:
+
+```ruby
+Grantinee.configure do |c|
+  c.engine   = :mysql
+
+  c.username = 'root'
+  c.password = 'password'
+  c.hostname = 'localhost'
+  c.port     = 3306
+  c.database = 'database_name'
+end
+```
+
+Alternatively you can use the database URL (looking at you Heroku):
+
+```ruby
+Grantinee.configure do |c|
+  c.engine = :mysql
+  c.url    = "mysql://root:password@localhost:3306/database_name"
+end
+```
+
+In case you do not want to or cannot use an initializer, you can save your configuration in a YAML file:
+
+```yaml
+engine:    mysql
+username:  root
+password:  password
+hostname:  localhost
+port:      3306
+database:  database_name
+```
+
+You can use it then by providing the command line argument, i.e. `grantinee -c config/grantinee.yml`
+
+### Permissions definition
+
 You can use the DSL to quickly set up your permissions:
 
 ```ruby
-Grantinee.on "database_name", engine: :mysql do
+on "database_name" do
   # User on any host
   user :username do
-    select :users, [ :id, :anonymized ]
-    select :lists_users
+    select :users, [ :id, :name ]
+    insert :users, [ :tracking_id ]
+    update :users, [ :tracking_id ]
+
+    all :articles
   end
 
-  # Or specify the host
-  user "username@%" do
-    insert :users
-    update :users, [ :id, :anonymized ]
+  # Or user on a specific host
+  user 'username@example.org' do
+    select :users, [ :id, :name ]
+    insert :users, [ :tracking_id ]
   end
 end
+
 ```
 
 ## Development
@@ -48,7 +92,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/grantinee. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/blinkist/grantinee. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 ## License
 

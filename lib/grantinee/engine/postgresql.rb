@@ -4,13 +4,15 @@ module Grantinee
   module Engine
     class Postgresql < AbstractEngine
 
-      def initialize(database)
-        @client = PG::Connection.open(
-          user:     Grantinee.config.dig(:postgresql, :username),
-          password: Grantinee.config.dig(:postgresql, :password),
-          host:     Grantinee.config.dig(:postgresql, :hostname),
-          port:     Grantinee.config.dig(:postgresql, :port),
-          dbname:   database
+      def initialize
+        configuration = Grantinee.configuration
+
+        @connection = PG::Connection.open(
+          user:     configuration.username,
+          password: configuration.password,
+          host:     configuration.hostname,
+          port:     configuration.port,
+          dbname:   configuration.database
         )
       end
 
@@ -30,7 +32,7 @@ module Grantinee
 
       def run!(query)
         ap query
-        return @client.exec query
+        return @connection.exec query
       end
 
     end
