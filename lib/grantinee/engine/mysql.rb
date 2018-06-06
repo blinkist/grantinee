@@ -55,7 +55,7 @@ module Grantinee
           when 1269 # Can't revoke all privileges for one or more of the requested users
             puts "Info: User %{user}@%{host} doesn't have any grants yet" % data
           when 1133 # Can't find any matching row in the user table
-            puts "Error: User %{user}@%{host} is not existing yet, create it with \"CREATE USER '%{user}'@'%{host}';\" first" % data
+            puts "Error: User %{user}@%{host} doesn't exist yet, create it with \"CREATE USER '%{user}'@'%{host}';\" first" % data
           else
             puts e.error_number
             raise e
