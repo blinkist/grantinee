@@ -52,8 +52,8 @@ RSpec.describe "Adding permissions" do
 
         expect {
           mysql_client.query("INSERT INTO users (id) VALUES ('malicious');")
-        }.to raise_error(PG::InsufficientPrivilege)
-      end      
+        }.to raise_error(Mysql2::Error)
+      end
     end
 
     context "when defining permissions for postgres" do
