@@ -2,7 +2,7 @@
 
 require "spec_helper"
 require "support/postgresql_helpers"
-require "byebug"
+require "pg"
 
 RSpec.shared_context "postgresql database" do
   # NOTE: the actual client that we assign permissions for

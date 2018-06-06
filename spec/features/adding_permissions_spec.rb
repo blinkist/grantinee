@@ -1,14 +1,12 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "grantinee/engine/postgresql"
-require "pg"
 
 require "support/shared_contexts/postgresql_database"
 
 RSpec.describe "Adding permissions" do
   context "when a permissions file exists with defined permissions" do
-    subject { `bin/grantinee -f Grantinee.test #{config}` }
+    subject { `grantinee -f Grantinee.test #{config}` }
 
     let(:database) { "grantinee_test" }
     let(:service) { "my_service" }
@@ -45,15 +43,7 @@ RSpec.describe "Adding permissions" do
     context "when defining permissions for postgres" do
       let(:config) { "-c spec/fixtures/config_postgresql.yml" }
 
-      # A root engine to create/drop the database
-      let(:pgsql_no_db_admin) do
-        PG::Connection.open(
-          user:     nil,
-          password: nil,
-          host:     Grantinee.config.dig(:postgresql, :hostname),
-          port:     Grantinee.config.dig(:postgresql, :port)
-        )
-      end
+      include_context "postgresql database"
 
       it "grants the service the defined privileges" do
         subject
