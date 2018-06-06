@@ -1,34 +1,46 @@
 #!/usr/bin/env ruby
 
 require 'bundler/setup'
+require 'optparse'
 require 'grantinee'
 
 # Create logger
 logger = ::Logger.new($stderr)
 
-# Look for ActiveRecord::Base connection
-Grantinee.detect_environment
+Grantinee.detect_active_record_connection!
 
-# Or use bin/grantinee -c config/grantinee.yml to load configuration from a file
-if (config_file_index = ARGV.index('-c'))
-  require 'yaml'
-  config_yaml = YAML.load(File.read(ARGV[config_file_index+1]))
+# Parse command line arguments
+parser = OptionParser.new do |opts|
+  opts.banner = "Usage: grantinee [options]"
 
-  Grantinee.configure do |c|
-    config_yaml.each do |key, value|
-      if Grantinee::Configuration::SUPPORTED_ARGUMENTS.include?(key.to_s)
-        c.send(:"#{key}=", value)
-      else
-        logger.info "Warning: Unsupported configuration argument '#{key}'"
+  # Help
+  opts.on('-h', '--help', "Displays help") do
+    puts opts
+    exit
+  end
+
+  # Verbose mode
+  opts.on('-v', '--verbose', "Run verbosely") do |n|
+    Grantinee.configuration.verbose = true
+  end
+
+  # Database configuration file
+  opts.on('-cFILE', '--config=FILE', "Database configuration file path") do |file_path|
+    require 'yaml'
+    config_yaml = YAML.load(File.read(file_path))
+
+    Grantinee.configure do |c|
+      config_yaml.each do |key, value|
+        if Grantinee::Configuration::SUPPORTED_ARGUMENTS.include?(key.to_s)
+          c.send(:"#{key}=", value)
+        else
+          puts "Warning: Unsupported configuration argument '#{key}'"
+        end
       end
     end
   end
 end
-
-# Handle verbose output
-if ARGV.index('-v')
-  Grantinee.configuration.verbose = true
-end
+parser.parse!
 
 # Read the DSL commands and prepare the engine
 parser = Grantinee::Dsl.eval(File.read('Grantinee'))

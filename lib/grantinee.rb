@@ -8,28 +8,30 @@ module Grantinee
       @logger ||= ::Logger.new($stderr)
     end
 
-    def detect_environment
+    def detect_active_record_connection!
       @configuration = Grantinee::Configuration.new
 
+      # config/environment.rb is a good candidate for a Rails app...
       if File.exists? './config/environment.rb'
         require './config/environment'
-        ar_configuration = ActiveRecord::Base.connection.instance_values['config']
-        @configuration.engine = case ar_configuration[:adapter]
-        when 'mysql', 'mysql2'
-          :mysql
-        when 'postgresql', 'pg'
-          :postgresql
+
+        # ...by now we should have ActiveRecord::Base if it really was Rails app
+        if defined?(ActiveRecord::Base)
+          ar_config = ActiveRecord::Base.connection_config
+
+          @configuration.username = ar_config[:username]
+          @configuration.password = ar_config[:password]
+          @configuration.hostname = ar_config[:host]
+          @configuration.port     = ar_config[:port]
+          @configuration.database = ar_config[:database]
+          @configuration.engine   = case ar_config[:adapter]
+          when 'mysql', 'mysql2'
+            :mysql
+          when 'postgresql', 'pg'
+            :postgresql
+          end
         end
-
-        @configuration.username = ar_configuration[:username]
-        @configuration.password = ar_configuration[:password]
-        @configuration.hostname = ar_configuration[:host]
-        @configuration.port     = ar_configuration[:port]
-        @configuration.database = ar_configuration[:database]
-
-        return true
       end
-      false
     end
 
     # Allow configuration using a block
