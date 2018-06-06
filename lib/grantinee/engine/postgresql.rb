@@ -27,20 +27,24 @@ module Grantinee
       end
 
       def revoke_permissions!(data)
-        query = "REVOKE ALL PRIVILEGES ON DATABASE %{database} FROM %{user};" % sanitize(data)
-        run! query
+        data  = sanitize(data)
+        query = "REVOKE ALL PRIVILEGES ON DATABASE %{database} FROM %{user};" % data
+
+        run! query, data
       end
 
       def grant_permission!(data)
+        data  = sanitize(data)
         query = if data[:fields].empty?
           "GRANT %{kind} ON %{table} TO %{user};"
         else
           "GRANT %{kind}(%{fields}) ON TABLE %{table} TO %{user};"
-        end % sanitize(data)
-        run! query
+        end % data
+
+        run! query, data
       end
 
-      def run!(query)
+      def run!(query, data={})
         puts query if Grantinee.configuration.verbose
         return @connection.exec query
       end
