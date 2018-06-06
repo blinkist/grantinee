@@ -1,26 +1,27 @@
 module Grantinee
   module Engine
     class AbstractEngine
+      NOT_IMPLEMENTED = "Not implemented"
 
       def initialize
-        raise "Not implemented"
+        raise NOT_IMPLEMENTED
       end
 
       def revoke_permissions!(data)
-        raise "Not implemented"
+        raise NOT_IMPLEMENTED
       end
 
       def grant_permission!(data)
-        raise "Not implemented"
+        raise NOT_IMPLEMENTED
       end
 
       def run!(query)
-        raise "Not implemented"
+        raise NOT_IMPLEMENTED
       end
 
       # Sanitize one value piece
       def sanitize_value
-        raise "Not implemented"
+        raise NOT_IMPLEMENTED
       end
 
       # Sanitize the data
