@@ -6,6 +6,9 @@ require 'grantinee'
 
 Grantinee.detect_active_record_connection!
 
+# NOTE: we expect a Grantinee file of permissions by default
+file_name = "Grantinee"
+
 # Parse command line arguments
 parser = OptionParser.new do |opts|
   opts.banner = "Usage: grantinee [options]"
@@ -36,15 +39,13 @@ parser = OptionParser.new do |opts|
       end
     end
   end
+
+  opts.on("-f", "--permissions=FILE", "File path of the defined permissions") do |file_path|
+    file_name = file_path
+  end
 end
+
 parser.parse!
-
-
-file_name = if (file_name_index = ARGV.index('-f'))
-              ARGV[file_name_index + 1]
-            else
-              "Grantinee"
-            end
 
 # Read the DSL commands and prepare the engine
 parser = Grantinee::Dsl.eval(File.read(file_name))
