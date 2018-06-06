@@ -12,9 +12,9 @@ parser = OptionParser.new do |opts|
 
   # Help
   opts.on('-h', '--help', "Displays help") do
-		puts opts
+    puts opts
     exit
-	end
+  end
 
   # Verbose mode
   opts.on('-v', '--verbose', "Run verbosely") do |n|
