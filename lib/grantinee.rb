@@ -1,6 +1,12 @@
+require 'logger'
+
 # Grantinee module is where the magic at ;-)
 module Grantinee
   class << self
+
+    def logger
+      @logger ||= ::Logger.new($stderr)
+    end
 
     def detect_environment
       @configuration = Grantinee::Configuration.new

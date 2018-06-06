@@ -7,6 +7,10 @@ module Grantinee
         raise NOT_IMPLEMENTED
       end
 
+      def logger
+        Grantinee.logger
+      end
+
       def flush_permissions!
         raise NOT_IMPLEMENTED
       end

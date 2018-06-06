@@ -47,17 +47,17 @@ module Grantinee
       end
 
       def run!(query, data={})
-        puts query if Grantinee.configuration.verbose
+        logger.debug query if Grantinee.configuration.verbose
         begin
           @connection.query query
         rescue ::Mysql2::Error => e
           case e.error_number
           when 1269 # Can't revoke all privileges for one or more of the requested users
-            puts "Info: User %{user}@%{host} doesn't have any grants yet" % data
+            logger.debug "User %{user}@%{host} doesn't have any grants yet" % data
           when 1133 # Can't find any matching row in the user table
-            puts "Error: User %{user}@%{host} doesn't exist yet, create it with \"CREATE USER '%{user}'@'%{host}';\" first" % data
+            logger.error "User %{user}@%{host} doesn't exist yet, create it with \"CREATE USER '%{user}'@'%{host}';\" first" % data
           else
-            puts e.error_number
+            logger.debug e.error_number
             raise e
           end
         end
