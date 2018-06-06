@@ -3,12 +3,30 @@ jobs:
   build:
     docker:
       - image: circleci/ruby:2.4.1-node-browsers
+      - image: circleci/postgres:9.6.2-alpine
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: grantinee_test
+      - image: circleci/mysql:5.7
+        environment:
+          MYSQL_DATABASE: grantinee_test
+          MYSQL_ROOT_PASSWORD: mysql
     steps:
       - checkout
 
       - run:
+          name: Wait for postgres DB
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+
+      - run:
+          name: Wait for mysql DB
+          command: dockerize -wait tcp://localhost:3306 -timeout 1m
+
+      - run:
           name: install dependencies
           command: bundle install --jobs=4 --retry=3 --path vendor/bundle
+
       - run:
           name: run tests
           command: bundle exec rake
