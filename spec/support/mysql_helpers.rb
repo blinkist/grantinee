@@ -29,13 +29,16 @@ module MysqlHelpers
 
     def create_role(role, password)
       @client.query "CREATE USER '#{role}'@'localhost' IDENTIFIED BY '#{password}';"
+      @client.query "CREATE USER '#{role}'@'%' IDENTIFIED BY '#{password}';"
     rescue Mysql2::Error
       drop_role(role)
       @client.query "CREATE USER '#{role}'@'localhost' IDENTIFIED BY '#{password}';"
+      @client.query "CREATE USER '#{role}'@'%' IDENTIFIED BY '#{password}';"
     end
 
     def drop_role(role)
-      @client.query "DROP USER #{role}@localhost;"
+      @client.query "DROP USER '#{role}'@'localhost';"
+      @client.query "DROP USER '#{role}'@'%';"
     end
 
     def create_tables
