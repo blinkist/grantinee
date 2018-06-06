@@ -22,6 +22,10 @@ module Grantinee
         )
       end
 
+      def flush_permissions!
+        # Postgres doesn't need to flush privileges
+      end
+
       def revoke_permissions!(data)
         query = "REVOKE ALL PRIVILEGES ON DATABASE %{database} FROM %{user};" % sanitize(data)
         run! query

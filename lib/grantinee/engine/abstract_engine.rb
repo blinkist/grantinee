@@ -7,6 +7,10 @@ module Grantinee
         raise NOT_IMPLEMENTED
       end
 
+      def flush_permissions!
+        raise NOT_IMPLEMENTED
+      end
+
       def revoke_permissions!(data)
         raise NOT_IMPLEMENTED
       end

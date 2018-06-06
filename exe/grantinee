@@ -35,3 +35,6 @@ parser.permissions.each { |data| engine.revoke_permissions!(data) }
 
 # Grant permissions
 parser.permissions.each { |data| engine.grant_permission!(data) }
+
+# Flush permissions
+engine.flush_permissions!

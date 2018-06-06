@@ -22,6 +22,12 @@ module Grantinee
         )
       end
 
+      def flush_permissions!
+        query = "FLUSH PRIVILEGES;"
+
+        run! query
+      end
+
       def revoke_permissions!(data)
         query = "REVOKE ALL PRIVILEGES, GRANT OPTION FROM %{user};" % sanitize(data)
         begin
