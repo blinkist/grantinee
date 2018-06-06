@@ -29,26 +29,38 @@ module Grantinee
       end
 
       def revoke_permissions!(data)
-        query = "REVOKE ALL PRIVILEGES, GRANT OPTION FROM %{user};" % sanitize(data)
-        begin
-          run! query
-        rescue Exception => e
-          # MySQL freaks out when there are no grants yet...
-        end
+        data  = sanitize(data)
+        query = "REVOKE ALL PRIVILEGES, GRANT OPTION FROM %{user};" % data
+
+        run! query, data
       end
 
       def grant_permission!(data)
+        data  = sanitize(data)
         query = if data[:fields].empty?
           "GRANT %{kind} ON %{table} TO '%{user}'@'%{host}';"
         else
           "GRANT %{kind}(%{fields}) ON %{table} TO '%{user}'@'%{host}';"
-        end % sanitize(data)
-        run! query
+        end % data
+
+        run! query, data
       end
 
-      def run!(query)
+      def run!(query, data={})
         puts query if Grantinee.configuration.verbose
-        return @connection.query query
+        begin
+          @connection.query query
+        rescue ::Mysql2::Error => e
+          case e.error_number
+          when 1269 # Can't revoke all privileges for one or more of the requested users
+            puts "Info: User %{user}@%{host} doesn't have any grants yet" % data
+          when 1133 # Can't find any matching row in the user table
+            puts "Error: User %{user}@%{host} is not existing yet, create it with \"CREATE USER '%{user}'@'%{host}';\" first" % data
+          else
+            puts e.error_number
+            raise e
+          end
+        end
       end
 
     end

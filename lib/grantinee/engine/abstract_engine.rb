@@ -19,7 +19,7 @@ module Grantinee
         raise NOT_IMPLEMENTED
       end
 
-      def run!(query)
+      def run!(query, data={})
         raise NOT_IMPLEMENTED
       end
 
