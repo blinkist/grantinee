@@ -11,7 +11,7 @@ RSpec.shared_context "mysql database" do
 
     Mysql2::Client.new(
       username: service,
-      password: "fake_password",
+      password: "secret",
       host:     configuration["hostname"],
       port:     configuration["port"],
       database: configuration["database"]
@@ -19,12 +19,12 @@ RSpec.shared_context "mysql database" do
   end
 
   before do
-    mysql_admin = MysqlHelpers::Mysql.new
+    mysql_admin = MysqlHelpers::Mysql.new(user: "root", password: "mysql")
     mysql_admin.create_database(database)
-    mysql_admin.create_role(service, "fake_password")
+    mysql_admin.create_role(service, "secret")
     mysql_admin.close
 
-    db_admin = MysqlHelpers::Mysql.new(database: database)
+    db_admin = MysqlHelpers::Mysql.new(user: "root", password: "mysql", database: database)
     db_admin.create_tables
     db_admin.create_user_records
     db_admin.close

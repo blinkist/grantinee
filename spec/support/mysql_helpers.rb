@@ -19,9 +19,8 @@ module MysqlHelpers
 
     def create_database(database)
       @client.query "CREATE DATABASE #{database};"
-    rescue => error
+    rescue Mysql2::Error => error
       puts error
-      # puts "#{database} database already exists, ignoring..."
     end
 
     def drop_database(database)
@@ -29,14 +28,14 @@ module MysqlHelpers
     end
 
     def create_role(role, password)
-      @client.query "CREATE USER #{role} IDENTIFIED BY '#{password}';"
-    rescue => error
-      puts error
-      # puts "#{role} role already exists, ignoring..."
+      @client.query "CREATE USER '#{role}'@'localhost' IDENTIFIED BY '#{password}';"
+    rescue Mysql2::Error
+      drop_role(role)
+      @client.query "CREATE USER '#{role}'@'localhost' IDENTIFIED BY '#{password}';"
     end
 
     def drop_role(role)
-      @client.query "DROP USER #{role};"
+      @client.query "DROP USER #{role}@localhost;"
     end
 
     def create_tables
@@ -46,21 +45,20 @@ module MysqlHelpers
 
     def create_users_table
       @client.query "CREATE TABLE users (id VARCHAR(30) PRIMARY KEY, "\
-                    "anonymized boolean, 'email.primary' varchar(30));"
-    rescue StandardError => error
-      puts error
-      # drop_table(:users)
-      # @client.query "CREATE TABLE users(id VARCHAR(30) PRIMARY KEY, anonymized boolean);"
+                    "anonymized boolean);"
+    rescue Mysql2::Error
+      drop_table(:users)
+      @client.query "CREATE TABLE users (id VARCHAR(30) PRIMARY KEY,"\
+                    "anonymized boolean);"
     end
 
     def create_lists_users_table
       @client.query "CREATE TABLE lists_users (id VARCHAR(30) PRIMARY KEY, "\
                     "list_name varchar(30), user_id varchar(30));"
     rescue StandardError => error
-      puts error
-      # drop_table(:lists_users)
-      # @client.query "CREATE TABLE lists_users(id VARCHAR(30) PRIMARY KEY, "\
-      #               "list_name varchar(30), user_id varchar(30));"
+      drop_table(:lists_users)
+      @client.query "CREATE TABLE lists_users (id VARCHAR(30) PRIMARY KEY, "\
+                    "list_name varchar(30), user_id varchar(30));"
     end
 
     def drop_table(name)
@@ -68,7 +66,9 @@ module MysqlHelpers
     end
 
     def create_user_records
-      @client.query "INSERT INTO users(id, anonymized) VALUES('12345e6', false);"
+      @client.query "INSERT INTO users (id, anonymized) VALUES ('12345e6', false);"
+    rescue => error
+      puts error
     end
 
     def close
