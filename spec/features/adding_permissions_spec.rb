@@ -44,12 +44,20 @@ RSpec.describe "Adding permissions" do
           -> { select :users, [ :id, :anonymized ] }
         end
 
-        it "grants the user the defined privileges" do
+        it "cannot insert records" do
+          expect { query(db_type, :insert) }.to raise_error(PG::InsufficientPrivilege)
+        end
+
+        it "can select records" do
           expect { query(db_type, :select) }.not_to raise_error
         end
 
-        it "denies the user any privilege that is not allowed" do
-          expect { query(db_type, :insert) }.to raise_error(PG::InsufficientPrivilege)
+        it "cannot update records" do
+          expect { query(db_type, :update) }.to raise_error(PG::InsufficientPrivilege)
+        end
+
+        it "cannot delete records" do
+          expect { query(db_type, :delete) }.to raise_error(PG::InsufficientPrivilege)
         end
       end
 
