@@ -6,11 +6,15 @@ require "support/shared_contexts/postgresql_database"
 
 RSpec.describe "Adding permissions" do
   context "when a permissions file exists with defined permissions" do
-    subject { `grantinee -f Grantinee.test #{config}` }
+    subject { `grantinee -f #{permissions_file} #{config}` }
 
     let(:database) { "grantinee_test" }
     let(:service) { "my_service" }
+    let(:permissions_file) { "Grantinee.test" }
 
+    # TODO: make small DSL that let's you define permissions for each context
+    # Think: https://github.com/blinkist/blinkist-watchman/blob/develop/spec/support/authorized_request.rb#L68
+    # https://github.com/blinkist/blinkist-watchman/blob/develop/spec/support/shared_examples/a_permissioned_resource.rb#L7
     let(:permissions) do
       %(
         on "#{database}" do
@@ -23,16 +27,16 @@ RSpec.describe "Adding permissions" do
     end
 
     before do
-      IO.write("./Grantinee.test", permissions)
+      IO.write("./#{permissions_file}", permissions)
 
       # NOTE: mock script to use test file
       allow(Grantinee::Dsl).to receive(:eval).and_call_original
       allow(Grantinee::Dsl).to receive(:eval).with(File.read('Grantinee')) do
-        Grantinee::Dsl.eval(File.read('Grantinee.test'))
+        Grantinee::Dsl.eval(File.read(permissions_file))
       end
     end
 
-    after { `rm ./Grantinee.test` }
+    after { `rm ./#{permissions_file}` }
 
     context "when defining permissions for mysql" do
       let(:config) { "-c spec/fixtures/config_mysql.yml" }
