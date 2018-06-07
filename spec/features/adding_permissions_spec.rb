@@ -120,6 +120,28 @@ RSpec.describe "Adding permissions" do
             expect { query(db_type, :delete) }.not_to raise_error
           end
         end
+
+        context "when the user can do all for a table" do
+          let(:permissions) do
+            -> { all :users }
+          end
+
+          it "can insert records" do
+            expect { query(db_type, :insert) }.not_to raise_error
+          end
+
+          it "can select records" do
+            expect { query(db_type, :select) }.not_to raise_error
+          end
+
+          it "can update records" do
+            expect { query(db_type, :update) }.not_to raise_error
+          end
+
+          it "can delete records" do
+            expect { query(db_type, :delete) }.not_to raise_error
+          end
+        end
       end
     end
   end
