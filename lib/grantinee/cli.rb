@@ -22,28 +22,43 @@ module Grantinee
         opts.banner = "Usage: grantinee [options]"
 
         # Help
-        opts.on('-h', '--help', "Displays help") do
+        opts.on(
+          '-h', '--help',
+          "Displays help"
+        ) do
           puts opts
           exit
         end
 
         # Verbose mode
-        opts.on('-vLEVEL', '--verbosity=LEVEL', "Set verbosity level to debug, info, warn, error, fatal, or unknown (default: warning)") do |level|
+        opts.on(
+          '-vLEVEL', '--verbosity=LEVEL',
+          "Set verbosity level to debug, info, warn, error, fatal, or unknown (default: warning)"
+        ) do |level|
           @options[:verbose] = level || 'warning'
         end
 
         # App boot file
-        opts.on('-rFILE', '--require=FILE', "Application boot file path (default: ./config/environment.rb)") do |file_path|
+        opts.on(
+          '-rFILE', '--require=FILE',
+          "Application boot file path (default: ./config/environment.rb)"
+        ) do |file_path|
           @options[:require] = file_path
         end
 
         # Grantinee file
-        opts.on('-fFILE', '--file=FILE', "Permission definitions file path (default: ./Grantinee)") do |file_path|
+        opts.on(
+          '-fFILE', '--file=FILE',
+          "Permission definitions file path (default: ./Grantinee)"
+        ) do |file_path|
           @options[:file] = file_path
         end
 
         # Database configuration file
-        opts.on('-cFILE', '--config=FILE', "Database configuration file path") do |file_path|
+        opts.on(
+          '-cFILE', '--config=FILE',
+          "Database configuration file path"
+        ) do |file_path|
           @options[:config] = file_path
         end
       end
