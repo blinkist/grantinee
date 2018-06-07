@@ -5,6 +5,8 @@ require "support/mysql_helpers"
 require "mysql2"
 
 RSpec.shared_context "mysql database" do
+  let(:db_type) { :mysql }
+
   # NOTE: the actual client that we assign permissions for
   let(:mysql_client) do
     configuration = YAML.safe_load(File.read("spec/fixtures/config_mysql.yml"))
