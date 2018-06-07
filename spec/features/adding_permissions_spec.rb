@@ -9,7 +9,6 @@ RSpec.describe "Adding permissions" do
   context "when a permissions file exists with defined permissions" do
     subject { `grantinee -f #{permissions_file} #{config}` }
 
-    let(:database) { "grantinee_test" }
     let(:user) { "my_user" }
 
     include_context "permissions"
@@ -43,9 +42,7 @@ RSpec.describe "Adding permissions" do
 
       context "when the user can select all fields" do
         let(:permissions) do
-          Permissions::Code.for(user, database: database) do
-            select :users, [ :id, :anonymized ]
-          end
+          -> { select :users, [ :id, :anonymized ] }
         end
 
         it "grants the user the defined privileges" do
@@ -67,9 +64,7 @@ RSpec.describe "Adding permissions" do
 
       context "when the user can create records for a table" do
         let(:permissions) do
-          Permissions::Code.for(user, database: database) do
-            insert :users
-          end
+          -> { insert :users }
         end
 
         it "grants the user the defined privileges" do

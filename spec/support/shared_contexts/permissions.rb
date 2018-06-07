@@ -8,21 +8,15 @@ RSpec.shared_context "permissions" do
   let(:database) { defined?(super()) ? super() : "grantinee_test"  }
   let(:user) { defined?(super()) ? super() : :dude }
 
+  # NOTE: default permissions
   let(:permissions) do
-    Permissions::Code.for(user, database: database) do
-      select :users, [ :id, :anonymized ]
-    end
+    -> { select :users, [ :id, :anonymized ] }
   end
 
-  before do
-    IO.write("./#{permissions_file}", permissions)
-
-    # NOTE: mock script to use test file
-    allow(Grantinee::Dsl).to receive(:eval).and_call_original
-    allow(Grantinee::Dsl).to receive(:eval).with(File.read('Grantinee')) do
-      Grantinee::Dsl.new(permissions)
-    end
+  let(:permissions_code) do
+    Permissions::Code.for(user, permissions, database: database)
   end
 
+  before { IO.write("./#{permissions_file}", permissions_code) }
   after { `rm ./#{permissions_file}` }
 end
