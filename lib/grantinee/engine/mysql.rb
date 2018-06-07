@@ -5,19 +5,6 @@ module Grantinee
   module Engine
     class Mysql < AbstractEngine
 
-      def sanitize_value(value)
-        @connection.escape value
-      end
-
-      def sanitize_column_name(name)
-        "`#{name.to_s.gsub('`', '``')}`"
-      end
-
-      def sanitize_table_name(name)
-        sanitize_column_name(name).gsub('.', '`.`')
-      end
-
-
       def initialize
         configuration = Grantinee.configuration
 
@@ -54,9 +41,24 @@ module Grantinee
         run! query, data
       end
 
+
+      private
+
+      def sanitize_value(value)
+        @connection.escape value
+      end
+
+      def sanitize_column_name(name)
+        "`#{name.to_s.gsub('`', '``')}`"
+      end
+
+      def sanitize_table_name(name)
+        sanitize_column_name(name).gsub('.', '`.`')
+      end
+
       def run!(query, data={})
         logger.info query
-        
+
         begin
           @connection.query query
         rescue ::Mysql2::Error => e

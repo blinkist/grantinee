@@ -12,6 +12,19 @@ module Grantinee
       @options = {}
     end
 
+    def run!
+      parse_command_line_parameters
+      process_command_line_parameters
+
+      @dsl     = build_dsl
+      @engine  = build_engine
+
+      [ @dsl, @engine ]
+    end
+
+
+    private 
+
     def parse_command_line_parameters
       parser = OptionParser.new do |opts|
         opts.banner = "Usage: grantinee [options]"
@@ -96,16 +109,6 @@ module Grantinee
 
     def build_engine
       Grantinee::Engine.for Grantinee.configuration.engine
-    end
-
-    def run!
-      parse_command_line_parameters
-      process_command_line_parameters
-
-      @dsl     = build_dsl
-      @engine  = build_engine
-
-      [ @dsl, @engine ]
     end
 
   end

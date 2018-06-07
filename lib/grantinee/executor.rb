@@ -6,6 +6,15 @@ module Grantinee
       @engine = engine
     end
 
+    def run!
+      revoke_permissions
+      grant_permissions
+      flush_permissions
+    end
+
+
+    private
+
     def revoke_permissions
       @dsl.permissions.each { |data| @engine.revoke_permissions!(data) }
     end
@@ -16,12 +25,6 @@ module Grantinee
 
     def flush_permissions
       @engine.flush_permissions!
-    end
-
-    def run!
-      revoke_permissions
-      grant_permissions
-      flush_permissions
     end
 
   end

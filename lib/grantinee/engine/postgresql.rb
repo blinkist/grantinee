@@ -5,19 +5,6 @@ module Grantinee
   module Engine
     class Postgresql < AbstractEngine
 
-      def sanitize_value(value)
-        @connection.escape_string value.to_s
-      end
-
-      def sanitize_column_name(name)
-        @connection.escape_string name.to_s
-      end
-
-      def sanitize_table_name(name)
-        @connection.escape_string name.to_s
-      end
-
-
       def initialize
         configuration = Grantinee.configuration
 
@@ -50,6 +37,21 @@ module Grantinee
         end % data
 
         run! query, data
+      end
+
+
+      private
+
+      def sanitize_value(value)
+        @connection.escape_string value.to_s
+      end
+
+      def sanitize_column_name(name)
+        @connection.escape_string name.to_s
+      end
+
+      def sanitize_table_name(name)
+        @connection.escape_string name.to_s
       end
 
       def run!(query, data={})
