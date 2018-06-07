@@ -1,9 +1,0 @@
-example_id                                            | status | run_time        |
------------------------------------------------------ | ------ | --------------- |
-./spec/features/adding_permissions_spec.rb[1:1:1:1]   | failed | 0.08262 seconds |
-./spec/features/adding_permissions_spec.rb[1:1:1:2]   | failed | 0.0899 seconds  |
-./spec/features/adding_permissions_spec.rb[1:1:2:1:1] | passed | 0.67496 seconds |
-./spec/features/adding_permissions_spec.rb[1:1:2:1:2] | passed | 0.46691 seconds |
-./spec/features/adding_permissions_spec.rb[1:1:2:2:1] | passed | 0.46985 seconds |
-./spec/features/adding_permissions_spec.rb[1:1:2:2:2] | passed | 0.46027 seconds |
-./spec/grantinee_spec.rb[1:1]                         | passed | 0.00169 seconds |

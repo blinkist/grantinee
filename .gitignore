@@ -7,5 +7,6 @@
 /spec/reports/
 /tmp/
 
-.rspec_status # rspec failure tracking
+# rspec failure tracking
+.rspec_status
 .byebug_history
