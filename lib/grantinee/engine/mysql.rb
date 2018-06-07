@@ -48,6 +48,7 @@ module Grantinee
 
       def run!(query, data={})
         logger.info query
+        
         begin
           @connection.query query
         rescue ::Mysql2::Error => e

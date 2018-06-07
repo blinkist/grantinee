@@ -46,7 +46,18 @@ module Grantinee
 
       def run!(query, data={})
         logger.info query
-        return @connection.exec query
+
+        begin
+          @connection.exec query
+        rescue PG::Error => e
+          case e
+          when PG::UndefinedObject
+            logger.fatal "User %{user}@%{host} doesn't exist yet, create it with \"CREATE ROLE %{user};\" first" % data
+          else
+            logger.debug e.class
+            raise e
+          end
+        end
       end
 
     end
