@@ -84,11 +84,5 @@ RSpec.describe "Adding permissions" do
         end
       end
     end
-
-    context "when defining permissions for mysql and postgres" do
-      let(:engine) { %i[mysql postgresql] }
-
-      # TODO
-    end
   end
 end
