@@ -4,8 +4,11 @@ require "spec_helper"
 require "support/shared_contexts/mysql_database"
 require "support/shared_contexts/postgresql_database"
 require "support/shared_contexts/permissions"
+require "support/query_helpers"
 
 RSpec.describe "Adding permissions" do
+  include QueryHelpers
+
   context "when a permissions file exists with defined permissions" do
     subject { `grantinee -f #{permissions_file} #{config}` }
 
@@ -37,7 +40,9 @@ RSpec.describe "Adding permissions" do
       before { subject }
 
       context "when the user can select all fields" do
-        let(:permissions) { -> { select :users, [ :id, :anonymized ] } }
+        let(:permissions) do
+          -> { select :users, [ :id, :anonymized ] }
+        end
 
         it "grants the user the defined privileges" do
           expect { select_query_for(db_type) }.not_to raise_error
@@ -49,7 +54,9 @@ RSpec.describe "Adding permissions" do
       end
 
       context "when the user can create records for a table" do
-        let(:permissions) { -> { insert :users } }
+        let(:permissions) do
+          -> { insert :users }
+        end
 
         it "can create records" do
           expect { create_query_for(db_type) }.not_to raise_error
