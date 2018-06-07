@@ -55,7 +55,8 @@ module Grantinee
       end
 
       def run!(query, data={})
-        logger.debug query
+        logger.info query
+        
         begin
           @connection.query query
         rescue ::Mysql2::Error => e
