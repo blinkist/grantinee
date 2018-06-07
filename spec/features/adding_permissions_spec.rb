@@ -24,11 +24,11 @@ RSpec.describe "Adding permissions" do
       before { subject }
 
       it "grants the user the defined privileges" do
-        expect { select_query_for(db_type) }.not_to raise_error
+        expect { query(db_type, :select) }.not_to raise_error
       end
 
       it "denies the user any privilege that is not allowed" do
-        expect { create_query_for(db_type) }.to raise_error(Mysql2::Error)
+        expect { query(db_type, :insert) }.to raise_error(Mysql2::Error)
       end
     end
 
@@ -45,33 +45,33 @@ RSpec.describe "Adding permissions" do
         end
 
         it "grants the user the defined privileges" do
-          expect { select_query_for(db_type) }.not_to raise_error
+          expect { query(db_type, :select) }.not_to raise_error
         end
 
         it "denies the user any privilege that is not allowed" do
-          expect { create_query_for(db_type) }.to raise_error(PG::InsufficientPrivilege)
+          expect { query(db_type, :insert) }.to raise_error(PG::InsufficientPrivilege)
         end
       end
 
-      context "when the user can create records for a table" do
+      context "when the user can insert records for a table" do
         let(:permissions) do
           -> { insert :users }
         end
 
-        it "can create records" do
-          expect { create_query_for(db_type) }.not_to raise_error
+        it "can insert records" do
+          expect { query(db_type, :insert) }.not_to raise_error
         end
 
         it "cannot select records" do
-          expect { select_query_for(db_type) }.to raise_error(PG::InsufficientPrivilege)
+          expect { query(db_type, :select) }.to raise_error(PG::InsufficientPrivilege)
         end
 
         it "cannot update records" do
-          expect { update_query_for(db_type) }.to raise_error(PG::InsufficientPrivilege)
+          expect { query(db_type, :update) }.to raise_error(PG::InsufficientPrivilege)
         end
 
         it "cannot delete records" do
-          expect { delete_query_for(db_type) }.to raise_error(PG::InsufficientPrivilege)
+          expect { query(db_type, :delete) }.to raise_error(PG::InsufficientPrivilege)
         end
       end
     end

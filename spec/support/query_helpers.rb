@@ -2,6 +2,19 @@
 
 # TODO: if queries are really the same, we can refactor this...
 module QueryHelpers
+  def query(db, command)
+    case command.to_s
+    when "insert"
+      create_query_for(db)
+    when "select"
+      select_query_for(db)
+    when "update"
+      update_query_for(db)
+    when "delete"
+      delete_query_for(db)
+    end
+  end
+
   def create_query_for(db)
     case db.to_s
     when "mysql"
