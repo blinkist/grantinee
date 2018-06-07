@@ -3,6 +3,7 @@
 require "spec_helper"
 require "support/shared_contexts/mysql_database"
 require "support/shared_contexts/postgresql_database"
+require "support/shared_contexts/permissions"
 
 RSpec.describe "Adding permissions" do
   context "when a permissions file exists with defined permissions" do
@@ -10,33 +11,8 @@ RSpec.describe "Adding permissions" do
 
     let(:database) { "grantinee_test" }
     let(:user) { "my_user" }
-    let(:permissions_file) { "Grantinee.test" }
 
-    # TODO: make small DSL that let's you define permissions for each context
-    # Think: https://github.com/blinkist/blinkist-watchman/blob/develop/spec/support/authorized_request.rb#L68
-    # https://github.com/blinkist/blinkist-watchman/blob/develop/spec/support/shared_examples/a_permissioned_resource.rb#L7
-    let(:permissions) do
-      %(
-        on "#{database}" do
-          # User on any host
-          user :#{user} do
-            select :users, [ :id, :anonymized ]
-          end
-        end
-      )
-    end
-
-    before do
-      IO.write("./#{permissions_file}", permissions)
-
-      # NOTE: mock script to use test file
-      allow(Grantinee::Dsl).to receive(:eval).and_call_original
-      allow(Grantinee::Dsl).to receive(:eval).with(File.read('Grantinee')) do
-        Grantinee::Dsl.eval(File.read(permissions_file))
-      end
-    end
-
-    after { `rm ./#{permissions_file}` }
+    include_context "permissions"
 
     context "for mysql" do
       let(:config) { "-c spec/fixtures/config_mysql.yml" }
@@ -67,14 +43,9 @@ RSpec.describe "Adding permissions" do
 
       context "when the user can select all fields" do
         let(:permissions) do
-          %(
-            on "#{database}" do
-              # User on any host
-              user :#{user} do
-                select :users, [ :id, :anonymized ]
-              end
-            end
-          )
+          Permissions::Code.for(user, database: database) do
+            select :users, [ :id, :anonymized ]
+          end
         end
 
         it "grants the user the defined privileges" do
@@ -96,14 +67,9 @@ RSpec.describe "Adding permissions" do
 
       context "when the user can create records for a table" do
         let(:permissions) do
-          %(
-            on "#{database}" do
-              # User on any host
-              user :#{user} do
-                insert :users, [ :id, :anonymized ]
-              end
-            end
-          )
+          Permissions::Code.for(user, database: database) do
+            insert :users
+          end
         end
 
         it "grants the user the defined privileges" do
