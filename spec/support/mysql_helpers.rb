@@ -69,7 +69,7 @@ module MysqlHelpers
     end
 
     def create_user_records
-      @client.query "INSERT INTO users (id, anonymized) VALUES ('12345e6', false);"
+      @client.query "INSERT INTO users (id, anonymized) VALUES ('1234', false);"
     rescue => error
       puts error
     end

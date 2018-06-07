@@ -67,19 +67,29 @@ RSpec.describe "Adding permissions" do
           -> { insert :users }
         end
 
-        it "grants the user the defined privileges" do
-          subject
+        before { subject }
 
+        it "can create records" do
           expect {
             postgresql_client.exec("INSERT INTO users(id) VALUES('just_doing_me');")
           }.not_to raise_error
         end
 
-        it "denies the user any privilege that is not allowed" do
-          subject
-
+        it "cannot select records" do
           expect {
             postgresql_client.exec("SELECT id, anonymized FROM users;")
+          }.to raise_error(PG::InsufficientPrivilege)
+        end
+
+        it "cannot update records" do
+          expect {
+            postgresql_client.exec("UPDATE users SET anonymized = true;")
+          }.to raise_error(PG::InsufficientPrivilege)
+        end
+
+        it "cannot delete records" do
+          expect {
+            postgresql_client.exec("DELETE FROM users;")
           }.to raise_error(PG::InsufficientPrivilege)
         end
       end

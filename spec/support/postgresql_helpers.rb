@@ -64,7 +64,7 @@ module PostgresqlHelpers
     end
 
     def create_user_records
-      @client.exec "INSERT INTO users(id, anonymized) VALUES('12345e6', false);"
+      @client.exec "INSERT INTO users(id, anonymized) VALUES('1234', false);"
     end
 
     def close
