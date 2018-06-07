@@ -36,7 +36,7 @@ module QueryHelpers
   def update_query_for(db)
     case db.to_s
     when "mysql"
-      # TODO
+      mysql_client.query("UPDATE users SET anonymized = true;")
     when "postgresql"
       postgresql_client.exec("UPDATE users SET anonymized = true;")
     end
@@ -45,7 +45,7 @@ module QueryHelpers
   def delete_query_for(db)
     case db.to_s
     when "mysql"
-      # TODO
+      mysql_client.query("DELETE FROM users;")
     when "postgresql"
       postgresql_client.exec("DELETE FROM users;")
     end

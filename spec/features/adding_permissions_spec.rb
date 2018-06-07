@@ -23,12 +23,26 @@ RSpec.describe "Adding permissions" do
 
       before { subject }
 
-      it "grants the user the defined privileges" do
-        expect { query(db_type, :select) }.not_to raise_error
-      end
+      context "when the user can select all fields" do
+        let(:permissions) do
+          -> { select :users, [ :id, :anonymized ] }
+        end
 
-      it "denies the user any privilege that is not allowed" do
-        expect { query(db_type, :insert) }.to raise_error(Mysql2::Error)
+        it "cannot insert records" do
+          expect { query(db_type, :insert) }.to raise_error(Mysql2::Error)
+        end
+
+        it "can select records" do
+          expect { query(db_type, :select) }.not_to raise_error
+        end
+
+        it "cannot update records" do
+          expect { query(db_type, :update) }.to raise_error(Mysql2::Error)
+        end
+
+        it "cannot delete records" do
+          expect { query(db_type, :delete) }.to raise_error(Mysql2::Error)
+        end
       end
     end
 
