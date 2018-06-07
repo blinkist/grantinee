@@ -28,7 +28,7 @@ RSpec.describe "Adding permissions" do
       end
 
       it "denies the user any privilege that is not allowed" do
-        expect { insert_query_for(db_type) }.to raise_error(Mysql2::Error)
+        expect { create_query_for(db_type) }.to raise_error(Mysql2::Error)
       end
     end
 
