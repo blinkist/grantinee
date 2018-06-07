@@ -10,7 +10,7 @@ RSpec.shared_context "postgresql database" do
     configuration = YAML.safe_load(File.read("spec/fixtures/config_postgresql.yml"))
 
     PG::Connection.open(
-      user:     service,
+      user:     user,
       password: "fake_password",
       host:     configuration["hostname"],
       port:     configuration["port"],
@@ -21,7 +21,7 @@ RSpec.shared_context "postgresql database" do
   before do
     pg_admin = PostgresqlHelpers::Postgresql.new(user: "postgres", password: "postgres")
     pg_admin.create_database(database)
-    pg_admin.create_role(service, "fake_password")
+    pg_admin.create_role(user, "fake_password")
     pg_admin.close
 
     db_admin = PostgresqlHelpers::Postgresql.new(user: "postgres", password: "postgres", database: database)

@@ -10,7 +10,7 @@ RSpec.shared_context "mysql database" do
     configuration = YAML.safe_load(File.read("spec/fixtures/config_mysql.yml"))
 
     Mysql2::Client.new(
-      username: service,
+      username: user,
       password: "secret",
       host:     configuration["hostname"],
       port:     configuration["port"],
@@ -21,7 +21,7 @@ RSpec.shared_context "mysql database" do
   before do
     mysql_admin = MysqlHelpers::Mysql.new(user: "root", password: "mysql")
     mysql_admin.create_database(database)
-    mysql_admin.create_role(service, "secret")
+    mysql_admin.create_role(user, "secret")
     mysql_admin.close
 
     db_admin = MysqlHelpers::Mysql.new(user: "root", password: "mysql", database: database)

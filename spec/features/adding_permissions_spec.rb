@@ -9,7 +9,7 @@ RSpec.describe "Adding permissions" do
     subject { `grantinee -f #{permissions_file} #{config}` }
 
     let(:database) { "grantinee_test" }
-    let(:service) { "my_service" }
+    let(:user) { "my_user" }
     let(:permissions_file) { "Grantinee.test" }
 
     # TODO: make small DSL that let's you define permissions for each context
@@ -19,7 +19,7 @@ RSpec.describe "Adding permissions" do
       %(
         on "#{database}" do
           # User on any host
-          user :#{service} do
+          user :#{user} do
             select :users, [ :id, :anonymized ]
           end
         end
@@ -38,12 +38,12 @@ RSpec.describe "Adding permissions" do
 
     after { `rm ./#{permissions_file}` }
 
-    context "when defining permissions for mysql" do
+    context "for mysql" do
       let(:config) { "-c spec/fixtures/config_mysql.yml" }
 
       include_context "mysql database"
 
-      it "grants the service the defined privileges" do
+      it "grants the user the defined privileges" do
         subject
 
         expect {
@@ -51,7 +51,7 @@ RSpec.describe "Adding permissions" do
         }.not_to raise_error
       end
 
-      it "denies the service any privilege that is not allowed" do
+      it "denies the user any privilege that is not allowed" do
         subject
 
         expect {
@@ -60,12 +60,12 @@ RSpec.describe "Adding permissions" do
       end
     end
 
-    context "when defining permissions for postgres" do
+    context "for postgres" do
       let(:config) { "-c spec/fixtures/config_postgresql.yml" }
 
       include_context "postgresql database"
 
-      it "grants the service the defined privileges" do
+      it "grants the user the defined privileges" do
         subject
 
         expect {
@@ -73,7 +73,7 @@ RSpec.describe "Adding permissions" do
         }.not_to raise_error
       end
 
-      it "denies the service any privilege that is not allowed" do
+      it "denies the user any privilege that is not allowed" do
         subject
 
         expect {
