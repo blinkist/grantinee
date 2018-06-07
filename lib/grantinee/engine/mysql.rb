@@ -26,7 +26,7 @@ module Grantinee
         query = format('REVOKE ALL PRIVILEGES, GRANT OPTION FROM %{user};', sanitize(data))
         begin
           run! query
-        rescue Exception => e
+        rescue StandardError
           # MySQL freaks out when there are no grants yet...
         end
       end
@@ -37,6 +37,7 @@ module Grantinee
                 else
                   "GRANT %{kind}(%{fields}) ON %{table} TO '%{user}'@'%{host}';"
         end % sanitize(data)
+
         run! query
       end
 
