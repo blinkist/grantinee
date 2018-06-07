@@ -48,7 +48,7 @@ module Grantinee
         @permissions << @data.merge({
           kind:   kind,
           table:  table,
-          fields: fields.join(', ')
+          fields: fields
         })
       end
     end

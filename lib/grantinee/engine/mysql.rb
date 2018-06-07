@@ -9,6 +9,14 @@ module Grantinee
         @connection.escape value
       end
 
+      def sanitize_column_name(name)
+        "`#{name.to_s.gsub('`', '``')}`"
+      end
+
+      def sanitize_table_name(name)
+        sanitize_column_name(name).gsub('.', '`.`')
+      end
+
 
       def initialize
         configuration = Grantinee.configuration
@@ -29,26 +37,25 @@ module Grantinee
       end
 
       def revoke_permissions!(data)
-        data  = sanitize(data)
-        query = "REVOKE ALL PRIVILEGES, GRANT OPTION FROM %{user};" % data
+        data = sanitize(data)
+        query = "REVOKE ALL PRIVILEGES, GRANT OPTION FROM %{user}@%{host};" % data
 
         run! query, data
       end
 
       def grant_permission!(data)
-        data  = sanitize(data)
+        data = sanitize(data)
         query = if data[:fields].empty?
-          "GRANT %{kind} ON %{table} TO '%{user}'@'%{host}';"
+          "GRANT %{kind} ON %{table} TO %{user}@%{host};"
         else
-          "GRANT %{kind}(%{fields}) ON %{table} TO '%{user}'@'%{host}';"
+          "GRANT %{kind}(%{fields}) ON %{table} TO %{user}@%{host};"
         end % data
 
         run! query, data
       end
 
       def run!(query, data={})
-        logger.info query
-        
+        logger.debug query
         begin
           @connection.query query
         rescue ::Mysql2::Error => e

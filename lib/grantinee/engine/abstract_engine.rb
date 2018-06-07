@@ -32,19 +32,30 @@ module Grantinee
         raise NOT_IMPLEMENTED
       end
 
+      # Sanitize column name
+      def sanitize_column_name(name)
+        raise NOT_IMPLEMENTED
+      end
+
+      # Sanitize table name
+      def sanitize_table_name
+        raise NOT_IMPLEMENTED
+      end
+
       # Sanitize the data
-      # Escapes values that are strings or symbols
-      # Escapes each value from an array
       def sanitize(data)
-        data.each do |key, value|
-          data[key] = case value
-          when String, Symbol
+        data.inject({}) do |memo, (key, value)|
+          memo[key] = case key
+          when :user, :host
+            sanitize_column_name(value)
+          when :table # table
+            sanitize_table_name(value)
+          when :fields # columns
+            value.map { |v| sanitize_column_name(v.to_s) }.join(', ')
+          else # values
             sanitize_value(value.to_s)
-          when Array
-            value.map { |v| sanitize_value(v.to_s) }
-          else
-            raise "Unsupported data type: #{value.class}"
           end
+          memo
         end
       end
 
