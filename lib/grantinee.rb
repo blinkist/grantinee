@@ -1,12 +1,13 @@
+# frozen_string_literal: true
+
 # Grantinee module is where the magic at ;-)
 module Grantinee
   class << self
-
     def detect_active_record_connection!
       @configuration = Grantinee::Configuration.new
 
       # config/environment.rb is a good candidate for a Rails app...
-      if File.exists? './config/environment.rb'
+      if File.exist? './config/environment.rb'
         require './config/environment'
 
         # ...by now we should have ActiveRecord::Base if it really was Rails app
@@ -19,10 +20,10 @@ module Grantinee
           @configuration.port     = ar_config[:port]
           @configuration.database = ar_config[:database]
           @configuration.engine   = case ar_config[:adapter]
-          when 'mysql', 'mysql2'
-            :mysql
-          when 'postgresql', 'pg'
-            :postgresql
+                                    when 'mysql', 'mysql2'
+                                      :mysql
+                                    when 'postgresql', 'pg'
+                                      :postgresql
           end
         end
       end
@@ -39,7 +40,7 @@ module Grantinee
       if configured?
         @configuration
       else
-        raise "Not configured"
+        raise 'Not configured'
       end
     end
 
@@ -47,7 +48,6 @@ module Grantinee
     def configured?
       @configuration
     end
-
   end
 end
 

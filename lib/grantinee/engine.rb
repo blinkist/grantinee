@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Grantinee
   module Engine
     class << self
@@ -21,6 +23,5 @@ module Grantinee
         end
       end
     end
-
   end
 end
