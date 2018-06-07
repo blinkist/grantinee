@@ -10,11 +10,6 @@ module Grantinee
       @logger  = logger
 
       @options = {}
-      parse_command_line_parameters
-      process_command_line_parameters
-
-      @dsl     = build_dsl
-      @engine  = build_engine
     end
 
     def parse_command_line_parameters
@@ -104,6 +99,12 @@ module Grantinee
     end
 
     def run!
+      parse_command_line_parameters
+      process_command_line_parameters
+
+      @dsl     = build_dsl
+      @engine  = build_engine
+
       [ @dsl, @engine ]
     end
 
