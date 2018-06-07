@@ -45,7 +45,7 @@ module Grantinee
       end
 
       def run!(query, data={})
-        logger.debug query if Grantinee.configuration.verbose
+        logger.info query
         return @connection.exec query
       end
 
