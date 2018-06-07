@@ -5,6 +5,8 @@ require "support/postgresql_helpers"
 require "pg"
 
 RSpec.shared_context "postgresql database" do
+  let(:db_type) { :postgresql }
+
   # NOTE: the actual client that we assign permissions for
   let(:postgresql_client) do
     configuration = YAML.safe_load(File.read("spec/fixtures/config_postgresql.yml"))
