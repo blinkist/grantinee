@@ -65,20 +65,62 @@ RSpec.describe "Adding permissions" do
 
       include_context "postgresql database"
 
-      it "grants the user the defined privileges" do
-        subject
+      context "when the user can select all fields" do
+        let(:permissions) do
+          %(
+            on "#{database}" do
+              # User on any host
+              user :#{user} do
+                select :users, [ :id, :anonymized ]
+              end
+            end
+          )
+        end
 
-        expect {
-          postgresql_client.exec("SELECT id, anonymized FROM users;")
-        }.not_to raise_error
+        it "grants the user the defined privileges" do
+          subject
+
+          expect {
+            postgresql_client.exec("SELECT id, anonymized FROM users;")
+          }.not_to raise_error
+        end
+
+        it "denies the user any privilege that is not allowed" do
+          subject
+
+          expect {
+            postgresql_client.exec("INSERT INTO users(id) VALUES('malicious');")
+          }.to raise_error(PG::InsufficientPrivilege)
+        end
       end
 
-      it "denies the user any privilege that is not allowed" do
-        subject
+      context "when the user can create records for a table" do
+        let(:permissions) do
+          %(
+            on "#{database}" do
+              # User on any host
+              user :#{user} do
+                insert :users, [ :id, :anonymized ]
+              end
+            end
+          )
+        end
 
-        expect {
-          postgresql_client.exec("INSERT INTO users(id) VALUES('malicious');")
-        }.to raise_error(PG::InsufficientPrivilege)
+        it "grants the user the defined privileges" do
+          subject
+
+          expect {
+            postgresql_client.exec("INSERT INTO users(id) VALUES('just_doing_me');")
+          }.not_to raise_error
+        end
+
+        it "denies the user any privilege that is not allowed" do
+          subject
+
+          expect {
+            postgresql_client.exec("SELECT id, anonymized FROM users;")
+          }.to raise_error(PG::InsufficientPrivilege)
+        end
       end
     end
 
