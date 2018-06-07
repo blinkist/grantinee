@@ -29,7 +29,7 @@ RSpec.describe "Adding permissions" do
         end
 
         it "cannot insert records" do
-          expect { query(db_type, :insert) }.to raise_error(Mysql2::Error)
+          expect { query(db_type, :insert) }.to raise_error(Mysql2::Error, /command denied to user/)
         end
 
         it "can select records" do
@@ -37,11 +37,11 @@ RSpec.describe "Adding permissions" do
         end
 
         it "cannot update records" do
-          expect { query(db_type, :update) }.to raise_error(Mysql2::Error)
+          expect { query(db_type, :update) }.to raise_error(Mysql2::Error, /command denied to user/)
         end
 
         it "cannot delete records" do
-          expect { query(db_type, :delete) }.to raise_error(Mysql2::Error)
+          expect { query(db_type, :delete) }.to raise_error(Mysql2::Error, /command denied to user/)
         end
       end
     end
