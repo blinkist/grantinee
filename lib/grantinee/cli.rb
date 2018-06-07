@@ -23,7 +23,7 @@ module Grantinee
     end
 
 
-    private 
+    private
 
     def parse_command_line_parameters
       parser = OptionParser.new do |opts|
@@ -76,11 +76,6 @@ module Grantinee
 
     # Process parsed parameters
     def process_command_line_parameters
-      # Database configuration file
-      if @options[:config]
-        require options[:config]
-      end
-
       # Application boot file
       if @options[:require]
         require @options[:require]
@@ -88,6 +83,11 @@ module Grantinee
       elsif defined?(Rails)
         require './config/environment'
         Grantinee.detect_active_record_connection!
+      end
+
+      # Database configuration file
+      if @options[:config]
+        require options[:config]
       end
 
       # Grantinee file
