@@ -18,6 +18,7 @@ RSpec.describe "Adding permissions" do
 
     context "for mysql" do
       let(:config) { "-c spec/fixtures/config_mysql.yml" }
+      let(:raised_error_args) { [Mysql2::Error, /command denied to user/] }
 
       include_context "mysql database"
 
@@ -29,7 +30,7 @@ RSpec.describe "Adding permissions" do
         end
 
         it "cannot insert records" do
-          expect { query(db_type, :insert) }.to raise_error(Mysql2::Error, /command denied to user/)
+          expect { query(db_type, :insert) }.to raise_error(*raised_error_args)
         end
 
         it "can select records" do
@@ -37,17 +38,18 @@ RSpec.describe "Adding permissions" do
         end
 
         it "cannot update records" do
-          expect { query(db_type, :update) }.to raise_error(Mysql2::Error, /command denied to user/)
+          expect { query(db_type, :update) }.to raise_error(*raised_error_args)
         end
 
         it "cannot delete records" do
-          expect { query(db_type, :delete) }.to raise_error(Mysql2::Error, /command denied to user/)
+          expect { query(db_type, :delete) }.to raise_error(*raised_error_args)
         end
       end
     end
 
     context "for postgres" do
       let(:config) { "-c spec/fixtures/config_postgresql.yml" }
+      let(:raised_error_args) { [PG::InsufficientPrivilege] }
 
       include_context "postgresql database"
 
@@ -59,7 +61,7 @@ RSpec.describe "Adding permissions" do
         end
 
         it "cannot insert records" do
-          expect { query(db_type, :insert) }.to raise_error(PG::InsufficientPrivilege)
+          expect { query(db_type, :insert) }.to raise_error(*raised_error_args)
         end
 
         it "can select records" do
@@ -67,11 +69,11 @@ RSpec.describe "Adding permissions" do
         end
 
         it "cannot update records" do
-          expect { query(db_type, :update) }.to raise_error(PG::InsufficientPrivilege)
+          expect { query(db_type, :update) }.to raise_error(*raised_error_args)
         end
 
         it "cannot delete records" do
-          expect { query(db_type, :delete) }.to raise_error(PG::InsufficientPrivilege)
+          expect { query(db_type, :delete) }.to raise_error(*raised_error_args)
         end
       end
 
@@ -85,15 +87,15 @@ RSpec.describe "Adding permissions" do
         end
 
         it "cannot select records" do
-          expect { query(db_type, :select) }.to raise_error(PG::InsufficientPrivilege)
+          expect { query(db_type, :select) }.to raise_error(*raised_error_args)
         end
 
         it "cannot update records" do
-          expect { query(db_type, :update) }.to raise_error(PG::InsufficientPrivilege)
+          expect { query(db_type, :update) }.to raise_error(*raised_error_args)
         end
 
         it "cannot delete records" do
-          expect { query(db_type, :delete) }.to raise_error(PG::InsufficientPrivilege)
+          expect { query(db_type, :delete) }.to raise_error(*raised_error_args)
         end
       end
     end
