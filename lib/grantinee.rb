@@ -43,10 +43,10 @@ module Grantinee
       @configuration.port     = ar_config[:port]
       @configuration.database = ar_config[:database]
       @configuration.engine   = case ar_config[:adapter]
-                                when 'mysql', 'mysql2'
-                                  :mysql
-                                when 'postgresql', 'pg'
-                                  :postgresql
+      when 'mysql', 'mysql2'
+        :mysql
+      when 'postgresql', 'pg'
+        :postgresql
       end
     end
   end

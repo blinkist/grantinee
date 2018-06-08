@@ -1,3 +1,6 @@
+Layout/CaseIndentation:
+  EnforcedStyle: end
+
 # offense count: 4
 Layout/EndAlignment:
   Enabled: false
