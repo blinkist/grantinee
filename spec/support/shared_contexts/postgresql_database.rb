@@ -21,12 +21,14 @@ RSpec.shared_context "postgresql database" do
   end
 
   before do
-    pg_admin = PostgresqlHelpers::Postgresql.new(user: "postgres", password: "postgres")
+    options = { user: "postgres", password: "postgres" }
+
+    pg_admin = PostgresqlHelpers::Postgresql.new(options)
     pg_admin.create_database(database)
     pg_admin.create_role(user, "fake_password")
     pg_admin.close
 
-    db_admin = PostgresqlHelpers::Postgresql.new(user: "postgres", password: "postgres", database: database)
+    db_admin = PostgresqlHelpers::Postgresql.new(options.merge(database: database))
     db_admin.create_tables
     db_admin.create_user_records
     db_admin.close

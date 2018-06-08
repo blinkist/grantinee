@@ -58,7 +58,7 @@ module MysqlHelpers
     def create_lists_users_table
       @client.query "CREATE TABLE lists_users (id VARCHAR(30) PRIMARY KEY, "\
                     "list_name varchar(30), user_id varchar(30));"
-    rescue StandardError => error
+    rescue StandardError
       drop_table(:lists_users)
       @client.query "CREATE TABLE lists_users (id VARCHAR(30) PRIMARY KEY, "\
                     "list_name varchar(30), user_id varchar(30));"

@@ -8,6 +8,11 @@ Layout/EndAlignment:
 Lint/HandleExceptions:
   Enabled: false
 
+Metrics/BlockLength:
+  Exclude:
+    - "grantinee.gemspec"
+    - "spec/**/*"
+
 Metrics/LineLength:
   Max: 100
   Exclude:

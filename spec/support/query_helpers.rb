@@ -2,21 +2,21 @@
 
 # TODO: if queries are really the same, we can refactor this...
 module QueryHelpers
-  def query(db, command)
+  def query(db_type, command)
     case command.to_s
     when "insert"
-      create_query_for(db)
+      create_query_for(db_type)
     when "select"
-      select_query_for(db)
+      select_query_for(db_type)
     when "update"
-      update_query_for(db)
+      update_query_for(db_type)
     when "delete"
-      delete_query_for(db)
+      delete_query_for(db_type)
     end
   end
 
-  def create_query_for(db)
-    case db.to_s
+  def create_query_for(db_type)
+    case db_type.to_s
     when "mysql"
       mysql_client.query("INSERT INTO users (id) VALUES ('just_doing_me');")
     when "postgresql"
@@ -24,8 +24,8 @@ module QueryHelpers
     end
   end
 
-  def select_query_for(db)
-    case db.to_s
+  def select_query_for(db_type)
+    case db_type.to_s
     when "mysql"
       mysql_client.query("SELECT id, anonymized FROM users;")
     when "postgresql"
@@ -33,8 +33,8 @@ module QueryHelpers
     end
   end
 
-  def update_query_for(db)
-    case db.to_s
+  def update_query_for(db_type)
+    case db_type.to_s
     when "mysql"
       mysql_client.query("UPDATE users SET anonymized = true;")
     when "postgresql"
@@ -42,8 +42,8 @@ module QueryHelpers
     end
   end
 
-  def delete_query_for(db)
-    case db.to_s
+  def delete_query_for(db_type)
+    case db_type.to_s
     when "mysql"
       mysql_client.query("DELETE FROM users;")
     when "postgresql"
