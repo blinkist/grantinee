@@ -1,12 +1,12 @@
+# frozen_string_literal: true
+
 module Grantinee
   class Dsl
-
     attr_accessor :permissions
-
 
     # Allow evaluation of the code coming from the Grantinee file
     def self.eval(commands)
-      self.new { eval(commands, binding) }
+      new { eval(commands, binding) }
     end
 
     # Initialize defaults and start processing
@@ -34,15 +34,14 @@ module Grantinee
     end
 
     # Define permission grants
-    %w{ all usage select insert update }.each do |kind|
-      define_method(kind.to_sym) do |table, fields=[]|
-        @permissions << @data.merge({
+    %w[all usage select insert update].each do |kind|
+      define_method(kind.to_sym) do |table, fields = []|
+        @permissions << @data.merge(
           kind:   kind,
           table:  table,
           fields: fields.join(', ')
-        })
+        )
       end
     end
-
   end
 end

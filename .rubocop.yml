@@ -1,0 +1,29 @@
+Layout/CaseIndentation:
+  EnforcedStyle: end
+
+# offense count: 4
+Layout/EndAlignment:
+  Enabled: false
+
+Lint/HandleExceptions:
+  Enabled: false
+
+Metrics/LineLength:
+  Max: 100
+  Exclude:
+    - grantinee.gemspec
+
+Metrics/MethodLength:
+  Max: 15
+
+Security/Eval:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Style/FormatStringToken:
+  Enabled: false
+
+Style/StringLiterals:
+  Enabled: false

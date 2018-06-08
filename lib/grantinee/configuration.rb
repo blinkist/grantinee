@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require 'uri'
 
 module Grantinee
   class Configuration
-    SUPPORTED_ARGUMENTS = %w{ engine username password hostname port database }
-    SUPPORTED_ENGINES   = %w{ mysql postgresql }
+    SUPPORTED_ARGUMENTS = %w[engine username password hostname port database].freeze
+    SUPPORTED_ENGINES   = %w[mysql postgresql].freeze
 
     # Keeps the information if the library was configured at least once
     attr_accessor :configured
@@ -17,11 +19,10 @@ module Grantinee
     attr_accessor :hostname
     attr_accessor :port
     attr_accessor :database
-    attr_accessor :url
+    attr_reader :url
 
     # Allow verbose mode
     attr_accessor :verbose
-
 
     def initialize
       # Do nothing...
@@ -32,15 +33,14 @@ module Grantinee
       uri = begin
         URI.parse url
       rescue URI::InvalidURIError
-        raise "Invalid database url"
+        raise 'Invalid database url'
       end
 
       @username = uri.user
       @password = uri.password
       @hostname = uri.host
       @port     = uri.port
-      @database = (uri.path || "").split('/').last
+      @database = (uri.path || '').split('/').last
     end
-
   end
 end
