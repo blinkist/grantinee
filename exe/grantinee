@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 require 'bundler/setup'
 require 'optparse'
@@ -11,23 +12,23 @@ file_name = "Grantinee"
 
 # Parse command line arguments
 parser = OptionParser.new do |opts|
-  opts.banner = "Usage: grantinee [options]"
+  opts.banner = 'Usage: grantinee [options]'
 
   # Help
-  opts.on('-h', '--help', "Displays help") do
+  opts.on('-h', '--help', 'Displays help') do
     puts opts
     exit
   end
 
   # Verbose mode
-  opts.on('-v', '--verbose', "Run verbosely") do |n|
+  opts.on('-v', '--verbose', 'Run verbosely') do |_n|
     Grantinee.configuration.verbose = true
   end
 
   # Database configuration file
-  opts.on('-cFILE', '--config=FILE', "Database configuration file path") do |file_path|
+  opts.on('-cFILE', '--config=FILE', 'Database configuration file path') do |file_path|
     require 'yaml'
-    config_yaml = YAML.load(File.read(file_path))
+    config_yaml = YAML.safe_load(File.read(file_path))
 
     Grantinee.configure do |c|
       config_yaml.each do |key, value|

@@ -1,9 +1,13 @@
+# frozen_string_literal: true
+
 module Grantinee
   module Engine
     class << self
       # Get appropriate engine class for the engine name
       def for(engine)
-        raise "Engine '#{engine}' is not supported" unless Configuration::SUPPORTED_ENGINES.include?(engine.to_s)
+        unless Configuration::SUPPORTED_ENGINES.include?(engine.to_s)
+          raise "Engine '#{engine}' is not supported"
+        end
 
         case engine.to_s
         when 'active_record'
@@ -21,6 +25,5 @@ module Grantinee
         end
       end
     end
-
   end
 end

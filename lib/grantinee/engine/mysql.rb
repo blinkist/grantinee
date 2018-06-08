@@ -1,14 +1,14 @@
-gem "mysql2", ">= 0.4.4", "< 0.6.0"
-require "mysql2"
+# frozen_string_literal: true
+
+gem 'mysql2', '>= 0.4.4', '< 0.6.0'
+require 'mysql2'
 
 module Grantinee
   module Engine
     class Mysql < AbstractEngine
-
       def sanitize_value(value)
         @connection.escape value
       end
-
 
       def initialize
         configuration = Grantinee.configuration
@@ -23,28 +23,28 @@ module Grantinee
       end
 
       def revoke_permissions!(data)
-        query = "REVOKE ALL PRIVILEGES, GRANT OPTION FROM %{user};" % sanitize(data)
+        query = format('REVOKE ALL PRIVILEGES, GRANT OPTION FROM %{user};', sanitize(data))
         begin
           run! query
-        rescue Exception => e
+        rescue StandardError
           # MySQL freaks out when there are no grants yet...
         end
       end
 
       def grant_permission!(data)
         query = if data[:fields].empty?
-          "GRANT %{kind} ON %{table} TO '%{user}'@'%{host}';"
-        else
-          "GRANT %{kind}(%{fields}) ON %{table} TO '%{user}'@'%{host}';"
+                  "GRANT %{kind} ON %{table} TO '%{user}'@'%{host}';"
+                else
+                  "GRANT %{kind}(%{fields}) ON %{table} TO '%{user}'@'%{host}';"
         end % sanitize(data)
+
         run! query
       end
 
       def run!(query)
         puts query if Grantinee.configuration.verbose
-        return @connection.query query
+        @connection.query query
       end
-
     end
   end
 end

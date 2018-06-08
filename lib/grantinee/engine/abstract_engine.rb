@@ -1,26 +1,27 @@
+# frozen_string_literal: true
+
 module Grantinee
   module Engine
     class AbstractEngine
-
       def initialize
-        raise "Not implemented"
+        raise 'Not implemented'
       end
 
-      def revoke_permissions!(data)
-        raise "Not implemented"
+      def revoke_permissions!(_data)
+        raise 'Not implemented'
       end
 
-      def grant_permission!(data)
-        raise "Not implemented"
+      def grant_permission!(_data)
+        raise 'Not implemented'
       end
 
-      def run!(query)
-        raise "Not implemented"
+      def run!(_query)
+        raise 'Not implemented'
       end
 
       # Sanitize one value piece
       def sanitize_value
-        raise "Not implemented"
+        raise 'Not implemented'
       end
 
       # Sanitize the data
@@ -38,7 +39,6 @@ module Grantinee
           end
         end
       end
-
     end
   end
 end
