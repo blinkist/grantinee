@@ -34,7 +34,7 @@ RSpec.describe "Adding permissions" do
 
         context "when the user can select all fields" do
           let(:permissions) do
-            -> { select :users, [ :id, :anonymized ] }
+            -> { select :users, %i[id anonymized] }
           end
 
           it "cannot insert records" do

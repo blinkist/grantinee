@@ -6,7 +6,7 @@ module Permissions
   class Code
     def self.for(user, permissions = nil, database: "grantinee_test", &block)
       permissions = if permissions
-                      if permissions.source.match(/lambda do/)
+                      if permissions.source =~ /lambda do/
                         permissions.source.split(/do|end/)[1..-2].first
                       else
                         permissions.source.split(/{|}/)[1..-2].first

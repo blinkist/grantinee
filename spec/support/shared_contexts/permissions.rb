@@ -5,12 +5,12 @@ require "support/permissions_helpers"
 
 RSpec.shared_context "permissions" do
   let(:permissions_file) { defined?(super()) ? super() : "Grantinee.test" }
-  let(:database) { defined?(super()) ? super() : "grantinee_test"  }
+  let(:database) { defined?(super()) ? super() : "grantinee_test" }
   let(:user) { defined?(super()) ? super() : :dude }
 
   # NOTE: default permissions
   let(:permissions) do
-    -> { select :users, [ :id, :anonymized ] }
+    -> { select :users, %i[id anonymized] }
   end
 
   let(:permissions_code) do
