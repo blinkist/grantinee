@@ -24,7 +24,7 @@ Before you start using Grantinee you need to configure it.
 
 ### Configure the connection with database
 
-Using Rails? Woop woop, you don't, have to do anything more, Grantinee is plug-and-play, as long as your database.yml user has granting permissions (probably doesn't, though).
+Using Rails? Woop woop, you don't have to do anything more! Grantinee is plug-and-play, as long as your database.yml user has granting permissions (probably doesn't, though).
 
 You can specify connection in a block, providing each information separately:
 

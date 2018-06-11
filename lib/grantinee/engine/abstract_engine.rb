@@ -1,44 +1,46 @@
+# frozen_string_literal: true
+
 module Grantinee
   module Engine
     class AbstractEngine
       NOT_IMPLEMENTED = "Not implemented"
 
-      def initialize
-        raise NOT_IMPLEMENTED
-      end
-
       def logger
         Grantinee.logger
+      end
+
+      def initialize
+        raise NOT_IMPLEMENTED
       end
 
       def flush_permissions!
         raise NOT_IMPLEMENTED
       end
 
-      def revoke_permissions!(data)
+      def revoke_permissions!(_data)
         raise NOT_IMPLEMENTED
       end
 
-      def grant_permission!(data)
+      def grant_permission!(_data)
         raise NOT_IMPLEMENTED
       end
 
-      def run!(query, data={})
+      def run!(_query, data={})
         raise NOT_IMPLEMENTED
       end
 
       # Sanitize one value piece
-      def sanitize_value
+      def sanitize_value(_value)
         raise NOT_IMPLEMENTED
       end
 
       # Sanitize column name
-      def sanitize_column_name(name)
+      def sanitize_column_name(_name)
         raise NOT_IMPLEMENTED
       end
 
       # Sanitize table name
-      def sanitize_table_name
+      def sanitize_table_name(_name)
         raise NOT_IMPLEMENTED
       end
 
@@ -58,7 +60,6 @@ module Grantinee
           memo
         end
       end
-
     end
   end
 end

@@ -1,5 +1,7 @@
-gem "pg", ">= 0.18", "< 2.0"
-require "pg"
+# frozen_string_literal: true
+
+gem 'pg', '>= 0.18', '< 2.0'
+require 'pg'
 
 module Grantinee
   module Engine
@@ -22,9 +24,8 @@ module Grantinee
       end
 
       def revoke_permissions!(data)
-        data  = sanitize(data)
-        query = "REVOKE ALL PRIVILEGES ON DATABASE %{database} FROM %{user};" % data
-
+        data = sanitize(data)
+        query = format 'REVOKE ALL PRIVILEGES ON DATABASE %{database} FROM %{user};', data
         run! query, data
       end
 
@@ -69,7 +70,6 @@ module Grantinee
           end
         end
       end
-
     end
   end
 end

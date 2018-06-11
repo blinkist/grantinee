@@ -1,5 +1,7 @@
-gem "mysql2", ">= 0.4.4", "< 0.6.0"
-require "mysql2"
+# frozen_string_literal: true
+
+gem 'mysql2', '>= 0.4.4', '< 0.6.0'
+require 'mysql2'
 
 module Grantinee
   module Engine
@@ -25,7 +27,7 @@ module Grantinee
 
       def revoke_permissions!(data)
         data = sanitize(data)
-        query = "REVOKE ALL PRIVILEGES, GRANT OPTION FROM %{user}@%{host};" % data
+        query = format('REVOKE ALL PRIVILEGES, GRANT OPTION FROM %{user};', data)
 
         run! query, data
       end
@@ -73,7 +75,6 @@ module Grantinee
           end
         end
       end
-
     end
   end
 end
