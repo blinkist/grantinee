@@ -2,6 +2,6 @@
 engine: postgresql
 username: postgres
 password: postgres
-hostname: localhost
+hostname: postgres
 port: 5432
 database: grantinee_test
