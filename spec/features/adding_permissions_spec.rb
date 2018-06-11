@@ -3,7 +3,7 @@
 require "spec_helper"
 require "support/shared_contexts/mysql_database"
 require "support/shared_contexts/postgresql_database"
-require "support/shared_contexts/permissions"
+require "support/shared_contexts/permissions_file"
 require "support/query_helpers"
 
 def db_error_args
@@ -21,7 +21,7 @@ RSpec.describe "Adding permissions" do
 
     let(:user) { "my_user" }
 
-    include_context "permissions"
+    include_context "permissions file"
 
     %i[mysql postgresql].each do |db_type|
       context "for #{db_type}" do

@@ -3,7 +3,7 @@
 require "spec_helper"
 require "support/permissions_helpers"
 
-RSpec.shared_context "permissions" do
+RSpec.shared_context "permissions file" do
   let(:permissions_file) { defined?(super()) ? super() : "Grantinee.test" }
   let(:database) { defined?(super()) ? super() : "grantinee_test" }
   let(:user) { defined?(super()) ? super() : :dude }
