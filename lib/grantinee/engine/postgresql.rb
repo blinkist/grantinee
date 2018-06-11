@@ -23,19 +23,24 @@ module Grantinee
       end
 
       def revoke_permissions!(data)
-        data = sanitize(data)
-        query = format 'REVOKE ALL PRIVILEGES ON DATABASE %{database} FROM %{user};', data
+        database = sanitize_column_name(data[:database])
+        user     = sanitize_column_name(data[:database])
+
+        query = "REVOKE ALL PRIVILEGES ON DATABASE #{database} FROM #{user};"
         run! query, data
       end
 
       def grant_permission!(data)
-        data  = sanitize(data)
-        query = if data[:fields].empty?
-                  "GRANT %{kind} ON %{table} TO %{user};"
-                else
-                  "GRANT %{kind}(%{fields}) ON TABLE %{table} TO %{user};"
-        end % data
+        kind   = sanitize_value(data[:kind])
+        table  = sanitize_table_name(data[:table])
+        user   = sanitize_column_name(data[:user])
+        fields = data[:fields].map { |v| sanitize_column_name(v.to_s) }.join(', ')
 
+        query = if data[:fields].empty?
+                  "GRANT #{kind} ON #{table} TO #{user};"
+                else
+                  "GRANT #{kind}(#{fields}) ON TABLE #{table} TO #{user};"
+                end
         run! query, data
       end
 

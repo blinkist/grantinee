@@ -43,22 +43,6 @@ module Grantinee
       def sanitize_table_name(_name)
         raise NOT_IMPLEMENTED
       end
-
-      # Sanitize the data
-      def sanitize(data)
-        data.each_with_object({}) do |(key, value), memo|
-          memo[key] = case key
-          when :user, :host
-            sanitize_column_name(value)
-          when :table # table
-            sanitize_table_name(value)
-          when :fields # columns
-            value.map { |v| sanitize_column_name(v.to_s) }.join(', ')
-          else # values
-            sanitize_value(value.to_s)
-          end
-        end
-      end
     end
   end
 end
