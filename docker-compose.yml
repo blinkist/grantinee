@@ -33,6 +33,8 @@ services:
     depends_on:
       - mysql
       - postgres
+    networks:
+      - blinkist
 
 networks:
   blinkist:
