@@ -5,7 +5,7 @@ require 'logger'
 module Grantinee
   class << self
     attr_reader :logger
-    
+
     # Allow configuration using a block
     def configure
       yield @configuration = Grantinee::Configuration.new

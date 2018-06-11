@@ -93,9 +93,7 @@ module Grantinee
     def process_require_param
       if @options[:require]
         require @options[:require]
-        Grantinee.detect_active_record_connection!
       elsif defined?(Rails)
-        require './config/environment'
         Grantinee.detect_active_record_connection!
       end
     end
