@@ -26,23 +26,25 @@ module Grantinee
 
       def revoke_permissions!(data)
         database = sanitize_column_name(data[:database])
-        user     = sanitize_column_name(data[:database])
+        user     = sanitize_column_name(data[:user])
+        host     = sanitize_column_name(data[:host])
 
-        query = "REVOKE ALL PRIVILEGES ON #{database}.* FROM #{user};"
+        query = "REVOKE ALL PRIVILEGES ON #{database}.* FROM #{user}@#{host};"
         run! query, data
       end
 
       def grant_permission!(data) # rubocop:disable Metrics/AbcSize
-        kind   = sanitize_value(data[:kind])
-        table  = sanitize_table_name(data[:table])
-        user   = sanitize_column_name(data[:user])
-        host   = sanitize_column_name(data[:host])
-        fields = data[:fields].map { |v| sanitize_column_name(v.to_s) }.join(', ')
+        database = sanitize_column_name(data[:database])
+        kind     = sanitize_value(data[:kind])
+        table    = sanitize_table_name(data[:table])
+        user     = sanitize_column_name(data[:user])
+        host     = sanitize_column_name(data[:host])
+        fields   = data[:fields].map { |v| sanitize_column_name(v.to_s) }.join(', ')
 
         query = if data[:fields].empty?
-                  "GRANT #{kind} ON #{table} TO #{user}@#{host};"
+                  "GRANT #{kind} ON #{database}.#{table} TO #{user}@#{host};"
                 else
-                  "GRANT #{kind}(#{fields}) ON #{table} TO #{user}@#{host};"
+                  "GRANT #{kind}(#{fields}) ON #{database}.#{table} TO #{user}@#{host};"
                 end
         run! query, data
       end
