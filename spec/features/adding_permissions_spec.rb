@@ -8,7 +8,7 @@ require "support/query_helpers"
 
 def db_error_args
   {
-    mysql: [Mysql2::Error, /command denied to user/],
+    mysql: [Mysql2::Error, /denied for user/],
     postgresql: [PG::InsufficientPrivilege]
   }
 end
