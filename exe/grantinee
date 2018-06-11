@@ -12,5 +12,4 @@ Bundler.require if File.exist? 'Gemfile.lock'
 logger       = Logger.new(STDOUT)
 logger.level = Logger::INFO
 
-dsl, engine  = Grantinee::CLI.new(ARGV, logger).run!
-Grantinee::Executor.new(dsl, engine).run!
+dsl, engine, executor = Grantinee::CLI.new(ARGV, logger).run!

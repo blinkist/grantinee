@@ -15,10 +15,12 @@ module Grantinee
       parse_command_line_parameters
       process_command_line_parameters
 
-      @dsl     = build_dsl
-      @engine  = build_engine
+      @dsl      = build_dsl
+      @engine   = build_engine
+      @executor = build_executor
+      @executor.run!
 
-      [@dsl, @engine]
+      [@dsl, @engine, @executor]
     end
 
     private
@@ -87,6 +89,10 @@ module Grantinee
 
     def build_engine
       Grantinee::Engine.for Grantinee.configuration.engine
+    end
+
+    def build_executor
+      Grantinee::Executor.new(@dsl, @engine)
     end
 
     # Application boot file
