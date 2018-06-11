@@ -4,7 +4,7 @@ require 'uri'
 
 module Grantinee
   class Configuration
-    SUPPORTED_ENGINES   = %w{ mysql postgresql }.freeze
+    SUPPORTED_ENGINES = %w[mysql postgresql].freeze
 
     # Which engine is used by the library?
     attr_accessor :engine

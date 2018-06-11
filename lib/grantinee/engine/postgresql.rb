@@ -6,7 +6,6 @@ require 'pg'
 module Grantinee
   module Engine
     class Postgresql < AbstractEngine
-
       def initialize
         configuration = Grantinee.configuration
 
@@ -32,14 +31,13 @@ module Grantinee
       def grant_permission!(data)
         data  = sanitize(data)
         query = if data[:fields].empty?
-          "GRANT %{kind} ON %{table} TO %{user};"
-        else
-          "GRANT %{kind}(%{fields}) ON TABLE %{table} TO %{user};"
+                  "GRANT %{kind} ON %{table} TO %{user};"
+                else
+                  "GRANT %{kind}(%{fields}) ON TABLE %{table} TO %{user};"
         end % data
 
         run! query, data
       end
-
 
       private
 
@@ -55,7 +53,7 @@ module Grantinee
         @connection.escape_string name.to_s
       end
 
-      def run!(query, data={})
+      def run!(query, data = {})
         logger.info query
 
         begin
@@ -63,7 +61,7 @@ module Grantinee
         rescue PG::Error => e
           case e
           when PG::UndefinedObject
-            logger.fatal "User %{user}@%{host} doesn't exist yet, create it with \"CREATE ROLE %{user};\" first" % data
+            logger.fatal format("User %{user}@%{host} doesn't exist yet, create it with \"CREATE ROLE %{user};\" first", data) # rubocop:disable Metrics/LineLength
           else
             logger.debug e.class
             raise e

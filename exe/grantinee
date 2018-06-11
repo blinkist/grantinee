@@ -6,9 +6,7 @@ require 'grantinee'
 require 'optparse'
 
 # Autodetect plug-and-play connection
-if File.exist? 'Gemfile.lock'
-  Bundler.require
-end
+Bundler.require if File.exist? 'Gemfile.lock'
 
 # Logger setup
 logger       = Logger.new(STDOUT)

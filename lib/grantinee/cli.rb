@@ -1,11 +1,10 @@
 module Grantinee
   class CLI
-
     attr_accessor :options
     attr_accessor :dsl
     attr_accessor :engine
 
-    def initialize(args=ARGV, logger=::Logger.new($stderr))
+    def initialize(args = ARGV, logger = ::Logger.new($stderr))
       @args    = args
       @logger  = logger
 
@@ -19,14 +18,13 @@ module Grantinee
       @dsl     = build_dsl
       @engine  = build_engine
 
-      [ @dsl, @engine ]
+      [@dsl, @engine]
     end
-
 
     private
 
-    def parse_command_line_parameters
-      parser = OptionParser.new do |opts|
+    def parse_command_line_parameters # rubocop:disable Metrics/MethodLength
+      parser = OptionParser.new do |opts| # rubocop:disable Metrics/BlockLength
         opts.banner = "Usage: grantinee [options]"
 
         # Help
@@ -76,30 +74,10 @@ module Grantinee
 
     # Process parsed parameters
     def process_command_line_parameters
-      # Application boot file
-      if @options[:require]
-        require @options[:require]
-        Grantinee.detect_active_record_connection!
-      elsif defined?(Rails)
-        require './config/environment'
-        Grantinee.detect_active_record_connection!
-      end
-
-      # Database configuration file
-      if @options[:config]
-        require options[:config]
-      end
-
-      # Grantinee file
-      unless @options[:file]
-        @options[:file] = "Grantinee"
-      end
-
-      # Explicit verbose mode, overrides configuration value
-      if @options[:verbose]
-        log_levels = %w{ debug info warn error fatal unknown }
-        @logger.level = log_levels.index(@options[:verbose])
-      end
+      process_require_param
+      process_database_param
+      process_grantinee_param
+      process_verbosity_param
     end
 
     def build_dsl
@@ -111,5 +89,34 @@ module Grantinee
       Grantinee::Engine.for Grantinee.configuration.engine
     end
 
+    # Application boot file
+    def process_require_param
+      if @options[:require]
+        require @options[:require]
+        Grantinee.detect_active_record_connection!
+      elsif defined?(Rails)
+        require './config/environment'
+        Grantinee.detect_active_record_connection!
+      end
+    end
+
+    # Database configuration file
+    def process_database_param
+      return unless @options[:config]
+      require options[:config]
+    end
+
+    # Grantinee file
+    def process_grantinee_param
+      return unless @options[:file]
+      @options[:file] = "Grantinee"
+    end
+
+    # Explicit verbose mode, overrides configuration value
+    def process_verbosity_param
+      return unless @options[:verbose]
+      log_levels = %w[debug info warn error fatal unknown]
+      @logger.level = log_levels.index(@options[:verbose])
+    end
   end
 end

@@ -6,7 +6,6 @@ require 'mysql2'
 module Grantinee
   module Engine
     class Mysql < AbstractEngine
-
       def initialize
         configuration = Grantinee.configuration
 
@@ -35,14 +34,13 @@ module Grantinee
       def grant_permission!(data)
         data = sanitize(data)
         query = if data[:fields].empty?
-          "GRANT %{kind} ON %{table} TO %{user}@%{host};"
-        else
-          "GRANT %{kind}(%{fields}) ON %{table} TO %{user}@%{host};"
-        end % data
+                  "GRANT %{kind} ON %{table} TO %{user}@%{host};"
+                else
+                  "GRANT %{kind}(%{fields}) ON %{table} TO %{user}@%{host};"
+                end % data
 
         run! query, data
       end
-
 
       private
 
@@ -58,7 +56,7 @@ module Grantinee
         sanitize_column_name(name).gsub('.', '`.`')
       end
 
-      def run!(query, data={})
+      def run!(query, data = {})
         logger.info query
 
         begin
@@ -66,9 +64,9 @@ module Grantinee
         rescue ::Mysql2::Error => e
           case e.error_number
           when 1269 # Can't revoke all privileges for one or more of the requested users
-            logger.debug "User %{user}@%{host} doesn't have any grants yet" % data
+            logger.debug format("User %{user}@%{host} doesn't have any grants yet", data)
           when 1133 # Can't find any matching row in the user table
-            logger.fatal "User %{user}@%{host} doesn't exist yet, create it with \"CREATE USER '%{user}'@'%{host}';\" first" % data
+            logger.fatal format("User %{user}@%{host} doesn't exist yet, create it with \"CREATE USER '%{user}'@'%{host}';\" first", data) # rubocop:disable Metrics/LineLength
           else
             logger.debug e.error_number
             raise e

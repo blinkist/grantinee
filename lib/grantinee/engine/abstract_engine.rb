@@ -3,7 +3,7 @@
 module Grantinee
   module Engine
     class AbstractEngine
-      NOT_IMPLEMENTED = "Not implemented"
+      NOT_IMPLEMENTED = "Not implemented".freeze
 
       def logger
         Grantinee.logger
@@ -25,7 +25,7 @@ module Grantinee
         raise NOT_IMPLEMENTED
       end
 
-      def run!(_query, data={})
+      def run!(_query, _data = {})
         raise NOT_IMPLEMENTED
       end
 
@@ -46,7 +46,7 @@ module Grantinee
 
       # Sanitize the data
       def sanitize(data)
-        data.inject({}) do |memo, (key, value)|
+        data.each_with_object({}) do |(key, value), memo|
           memo[key] = case key
           when :user, :host
             sanitize_column_name(value)
@@ -57,7 +57,6 @@ module Grantinee
           else # values
             sanitize_value(value.to_s)
           end
-          memo
         end
       end
     end

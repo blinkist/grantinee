@@ -3,7 +3,6 @@
 # Grantinee module is where the magic at ;-)
 module Grantinee
   class << self
-
     # Allow configuration using a block
     def configure
       yield @configuration = Grantinee::Configuration.new

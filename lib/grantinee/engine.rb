@@ -3,7 +3,6 @@
 module Grantinee
   module Engine
     class << self
-
       # Get appropriate engine class for the engine name
       def for(engine)
         logger.debug "Using engine: #{engine}"
@@ -23,13 +22,11 @@ module Grantinee
         end
       end
 
-
       private
 
       def logger
         Grantinee.logger
       end
-
     end
   end
 end

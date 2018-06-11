@@ -19,7 +19,7 @@ module Grantinee
 
     # Define database and mode
     def on(database, &block)
-      logger.debug "Got database: #{ database }"
+      logger.debug "Got database: #{database}"
 
       @data[:database] = database
 
@@ -29,7 +29,7 @@ module Grantinee
     # Define user and host
     # Note: revokes all permissions for given user first
     def user(user, &block)
-      logger.debug "Got user: #{ user }"
+      logger.debug "Got user: #{user}"
 
       @data[:user], @data[:host] = user.to_s.split '@'
       @data[:host] ||= '%'
@@ -50,12 +50,10 @@ module Grantinee
       end
     end
 
-
     private
 
     def logger
       Grantinee.logger
     end
-
   end
 end
