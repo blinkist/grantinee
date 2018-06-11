@@ -1,0 +1,40 @@
+version: '3'
+services:
+
+  mysql:
+    image: mysql:5.7.15
+    volumes:
+      - ./mysql:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql
+    networks:
+      - blinkist
+
+  postgres:
+    image: postgres:9.6
+    volumes:
+      - ./postgres/data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    networks:
+      - blinkist
+
+  rspec:
+    tty: true
+    stdin_open: true
+    build: .
+    command: bundle exec rspec
+    volumes:
+      - .:/myapp
+    depends_on:
+      - mysql
+      - postgres
+
+networks:
+  blinkist:
+    external:
+      name: blinkist
