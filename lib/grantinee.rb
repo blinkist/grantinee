@@ -1,8 +1,11 @@
 # frozen_string_literal: true
+require 'logger'
 
 # Grantinee module is where the magic at ;-)
 module Grantinee
   class << self
+    attr_reader :logger
+    
     # Allow configuration using a block
     def configure
       yield @configuration = Grantinee::Configuration.new
@@ -24,6 +27,10 @@ module Grantinee
       return unless defined?(ActiveRecord::Base)
 
       configure_for_active_record(ActiveRecord::Base.connection_config)
+    end
+
+    def logger=(logger)
+      @logger = logger
     end
 
     private

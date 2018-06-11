@@ -25,7 +25,7 @@ RSpec.describe "Adding permissions" do
 
     %i[mysql postgresql].each do |db_type|
       context "for #{db_type}" do
-        let(:config) { "-c spec/fixtures/config_#{db_type}.yml" }
+        let(:config) { "-c ./spec/fixtures/config_#{db_type}.rb" }
         let(:raised_error_args) { db_error_args[db_type] }
 
         include_context "#{db_type} database"

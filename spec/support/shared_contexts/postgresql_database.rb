@@ -9,14 +9,14 @@ RSpec.shared_context "postgresql database" do
 
   # NOTE: the actual client that we assign permissions for
   let(:postgresql_client) do
-    configuration = YAML.safe_load(File.read("spec/fixtures/config_postgresql.yml"))
+    require "./spec/fixtures/config_postgresql"
 
     PG::Connection.open(
       user:     user,
       password: "fake_password",
-      host:     configuration["hostname"],
-      port:     configuration["port"],
-      dbname:   configuration["database"]
+      host:     Grantinee.configuration.hostname,
+      port:     Grantinee.configuration.port,
+      dbname:   Grantinee.configuration.database
     )
   end
 
