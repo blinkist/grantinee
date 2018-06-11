@@ -26,7 +26,7 @@ module Grantinee
 
       def revoke_permissions!(data)
         data = sanitize(data)
-        query = format('REVOKE ALL PRIVILEGES, GRANT OPTION FROM %{user};', data)
+        query = format('REVOKE ALL PRIVILEGES ON %{database}.* FROM %{user};', data)
 
         run! query, data
       end
@@ -63,7 +63,7 @@ module Grantinee
           @connection.query query
         rescue ::Mysql2::Error => e
           case e.error_number
-          when 1269 # Can't revoke all privileges for one or more of the requested users
+          when 1141, 1269 # Can't revoke all privileges for one or more of the requested users
             logger.debug format("User %{user}@%{host} doesn't have any grants yet", data)
           when 1133 # Can't find any matching row in the user table
             logger.fatal format("User %{user}@%{host} doesn't exist yet, create it with \"CREATE USER '%{user}'@'%{host}';\" first", data) # rubocop:disable Metrics/LineLength
