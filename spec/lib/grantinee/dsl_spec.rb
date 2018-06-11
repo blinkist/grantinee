@@ -5,6 +5,9 @@ require "support/permissions_helpers"
 
 module Grantinee
   RSpec.describe Dsl do
+    let(:logger) { double debug: nil, info: nil }
+    before { allow(Grantinee).to receive(:logger).and_return(logger) }
+
     describe "::new" do
       subject { described_class.eval(permissions_code) }
 
@@ -15,9 +18,6 @@ module Grantinee
           select :users, [:id]
         end
       end
-
-      # NOTE: mock the logger
-      let(:logger) { double debug: nil, info: nil }
 
       # TODO: do we need both of these variables here? We're storing the same
       # info in "db_data" as we are in "permissions_data"
@@ -34,8 +34,6 @@ module Grantinee
           }
         ]
       end
-
-      before { allow(Grantinee).to receive(:logger).and_return(logger) }
 
       # Obviously...
       it { is_expected.to be_an_instance_of Grantinee::Dsl }
