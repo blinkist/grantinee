@@ -17,6 +17,8 @@ module Grantinee
       instance_eval(&block)
     end
 
+    private
+
     # Define database and mode
     def on(database, &block)
       logger.debug "Got database: #{database}"
@@ -49,8 +51,6 @@ module Grantinee
         )
       end
     end
-
-    private
 
     def logger
       Grantinee.logger
