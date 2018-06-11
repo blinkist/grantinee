@@ -17,7 +17,7 @@ RSpec.describe "Adding permissions" do
   include QueryHelpers
 
   context "when a permissions file exists with defined permissions" do
-    subject { `grantinee -f #{permissions_file} #{config}` }
+    subject { `exe/grantinee -f #{permissions_file} #{config}` }
 
     let(:user) { "my_user" }
 
