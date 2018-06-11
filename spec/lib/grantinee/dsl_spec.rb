@@ -8,6 +8,8 @@ module Grantinee
     describe "::new" do
       subject { described_class.eval(permissions_code) }
 
+      # TODO: test different permissions scenarios
+
       let(:permissions_code) do
         Permissions::Code.for("user") do
           select :users, [:id]
