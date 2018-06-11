@@ -94,7 +94,7 @@ module Grantinee
       if @options[:require]
         require @options[:require]
       elsif defined?(Rails)
-        Grantinee.detect_active_record_connection!
+        Grantinee::Engine.detect_active_record_connection!
       end
     end
 
