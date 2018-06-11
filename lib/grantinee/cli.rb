@@ -102,14 +102,12 @@ module Grantinee
 
     # Database configuration file
     def process_database_param
-      return unless @options[:config]
-      require options[:config]
+      require options[:config] if @options[:config]
     end
 
     # Grantinee file
     def process_grantinee_param
-      return unless @options[:file]
-      @options[:file] = "Grantinee"
+      @options[:file] ||= "Grantinee"
     end
 
     # Explicit verbose mode, overrides configuration value
