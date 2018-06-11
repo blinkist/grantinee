@@ -17,6 +17,8 @@ module Grantinee
       # NOTE: mock the logger
       let(:logger) { double debug: nil, info: nil }
 
+      # TODO: do we need both of these variables here? We're storing the same
+      # info in "db_data" as we are in "permissions_data"
       let(:db_data) { { user: "user", host: "%", database: "grantinee_test" } }
       let(:permissions_data) do
         [
