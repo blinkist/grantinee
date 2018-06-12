@@ -37,7 +37,7 @@ module Grantinee
         raise "Invalid permission kind" unless WHITELISTED_KINDS.include?(data[:kind])
 
         database = sanitize_column_name(data[:database])
-        kind     = kind
+        kind     = data[:kind]
         table    = sanitize_table_name(data[:table])
         user     = sanitize_value(data[:user])
         host     = sanitize_value(data[:host])
