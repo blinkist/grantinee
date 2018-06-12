@@ -8,7 +8,7 @@ module Grantinee
 
     # Allow configuration using a block
     def configure
-      yield @configuration = Grantinee::Configuration.new
+      yield configuration
     end
 
     # Returns configuration
