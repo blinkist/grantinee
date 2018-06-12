@@ -4,5 +4,5 @@ Grantinee.configure do |c|
   c.password = 'mysql'
   c.hostname = ENV['MYSQL_HOST'] || 'localhost'
   c.port     = 3306
-  c.database = 'grantinee_development'
+  c.database = 'grantinee_test'
 end
