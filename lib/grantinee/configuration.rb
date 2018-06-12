@@ -24,6 +24,14 @@ module Grantinee
       # Do nothing...
     end
 
+    def configured?
+      self.username.present? &&
+        self.password.present? &&
+        self.hostname.present? &&
+        self.port.present? &&
+        self.database.present?
+    end
+
     # Handle url -> fields conversion
     def url=(url)
       uri = begin

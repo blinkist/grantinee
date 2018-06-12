@@ -100,13 +100,19 @@ module Grantinee
       if @options[:require]
         require @options[:require]
       elsif defined?(Rails)
-        Grantinee::Engine.detect_active_record_connection!
+        require './config/environment'
       end
     end
 
     # Database configuration file
-    def process_database_param
-      require options[:config] if @options[:config]
+    def process_database_param # rubocop:disable Style/GuardClause Style/IfUnlessModifier
+      if options[:config]
+        require options[:config]
+      end
+
+      unless Gratinee.configuration.configured?
+        Grantinee::Engine.detect_active_record_connection!
+      end
     end
 
     # Grantinee file

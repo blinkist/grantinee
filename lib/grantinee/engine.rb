@@ -23,13 +23,6 @@ module Grantinee
       end
 
       def detect_active_record_connection!
-        @configuration = Grantinee::Configuration.new
-
-        # config/environment.rb is a good candidate for a Rails app...
-        return unless File.exist? './config/environment.rb'
-        require './config/environment'
-
-        # ...by now we should have ActiveRecord::Base if it really was Rails app
         return unless defined?(ActiveRecord::Base)
 
         configure_for_active_record(ActiveRecord::Base.connection_config)
@@ -42,17 +35,30 @@ module Grantinee
       end
 
       def configure_for_active_record(ar_config)
-        @configuration.username = ar_config[:username]
-        @configuration.password = ar_config[:password]
-        @configuration.hostname = ar_config[:host]
-        @configuration.port     = ar_config[:port]
-        @configuration.database = ar_config[:database]
-        @configuration.engine   = case ar_config[:adapter]
+        if ar_config[:url]
+          configure_for_active_record_url(ar_config)
+        else
+          configure_for_active_record_fields(ar_config)
+        end
+
+        Grantinee.configuration.engine = case ar_config[:adapter]
         when 'mysql', 'mysql2'
           :mysql
         when 'postgresql', 'pg'
           :postgresql
         end
+      end
+
+      def configure_for_active_record_url(ar_config)
+        Grantinee.configuration.url = ar_config[:url]
+      end
+
+      def configure_for_active_record_fields(ar_config)
+        Grantinee.configuration.username = ar_config[:username]
+        Grantinee.configuration.password = ar_config[:password]
+        Grantinee.configuration.hostname = ar_config[:host]
+        Grantinee.configuration.port     = ar_config[:port]
+        Grantinee.configuration.database = ar_config[:database]
       end
     end
   end
