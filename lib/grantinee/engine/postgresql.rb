@@ -30,8 +30,10 @@ module Grantinee
         run! query, data
       end
 
-      def grant_permission!(data)
-        kind   = sanitize_value(data[:kind])
+      def grant_permission!(data) # rubocop:disable Metrics/AbcSize
+        raise "Invalid permission kind" unless WHITELISTED_KINDS.include?(data[:kind])
+
+        kind   = data[:kind]
         table  = sanitize_table_name(data[:table])
         user   = sanitize_column_name(data[:user])
         fields = data[:fields].map { |v| sanitize_column_name(v.to_s) }.join(', ')
@@ -51,11 +53,11 @@ module Grantinee
       end
 
       def sanitize_column_name(name)
-        @connection.escape_string name.to_s
+        @connection.quote_ident name.to_s
       end
 
       def sanitize_table_name(name)
-        @connection.escape_string name.to_s
+        @connection.quote_ident name.to_s
       end
 
       def run!(query, data = {})

@@ -1,7 +1,0 @@
-# Postgresql
-engine: postgresql
-username: postgres
-password: postgres
-hostname: postgres
-port: 5432
-database: grantinee_test

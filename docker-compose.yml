@@ -20,6 +20,9 @@ services:
       - POSTGRES_PASSWORD=postgres
 
   rspec:
+    environment:
+      MYSQL_HOST: 'mysql'
+      POSTGRES_HOST: 'postgres'
     tty: true
     stdin_open: true
     build: .
