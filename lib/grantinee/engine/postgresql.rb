@@ -51,11 +51,11 @@ module Grantinee
       end
 
       def sanitize_column_name(name)
-        @connection.escape_string name.to_s
+        @connection.quote_ident name.to_s
       end
 
       def sanitize_table_name(name)
-        @connection.escape_string name.to_s
+        @connection.quote_ident name.to_s
       end
 
       def run!(query, data = {})
