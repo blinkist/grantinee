@@ -9,7 +9,7 @@ RSpec.shared_context "postgresql database" do
 
   # NOTE: the actual client that we assign permissions for
   let(:postgresql_client) do
-    require "./spec/fixtures/config_postgresql"
+    load "./spec/fixtures/config_postgresql.rb"
 
     PG::Connection.open(
       user:     user,
@@ -21,6 +21,8 @@ RSpec.shared_context "postgresql database" do
   end
 
   before do
+    load "./spec/fixtures/config_postgresql.rb"
+
     options = { user: "postgres", password: "postgres" }
 
     pg_admin = PostgresqlHelpers::Postgresql.new(options)

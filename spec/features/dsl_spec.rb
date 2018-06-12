@@ -3,7 +3,7 @@
 require "spec_helper"
 require "support/shared_contexts/mysql_database"
 require "support/shared_contexts/postgresql_database"
-require "support/shared_contexts/permissions_file"
+require "support/shared_contexts/permissions"
 require "support/query_helpers"
 
 def db_error_args
@@ -13,15 +13,22 @@ def db_error_args
   }
 end
 
-RSpec.describe "Adding permissions" do
+RSpec.describe "DSL specs" do
   include QueryHelpers
 
-  context "when a permissions file exists with defined permissions" do
-    subject { `exe/grantinee -f #{permissions_file} #{config}` }
+  context "when a the dsl gets passed permissions" do
+    subject { Grantinee::Executor.new(dsl, engine).run! }
+
+    let(:dsl) { Grantinee::Dsl.eval(permissions_code) }
+    let(:engine) { Grantinee::Engine.for(db_type) }
 
     let(:user) { "my_user" }
 
-    include_context "permissions file"
+    include_context "permissions"
+
+    before do
+      allow(Grantinee).to receive(:logger).and_return(::Logger.new($stderr))
+    end
 
     %i[mysql postgresql].each do |db_type|
       context "for #{db_type}" do

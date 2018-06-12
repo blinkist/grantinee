@@ -9,7 +9,7 @@ RSpec.shared_context "mysql database" do
 
   # NOTE: the actual client that we assign permissions for
   let(:mysql_client) do
-    require "./spec/fixtures/config_mysql"
+    load "./spec/fixtures/config_mysql.rb"
 
     Mysql2::Client.new(
       username: user,
@@ -21,6 +21,8 @@ RSpec.shared_context "mysql database" do
   end
 
   before do
+    load "./spec/fixtures/config_mysql.rb"
+
     mysql_admin = MysqlHelpers::Mysql.new(user: "root", password: "mysql")
     mysql_admin.create_database(database)
     mysql_admin.create_role(user, "secret")
