@@ -38,7 +38,7 @@ module Grantinee
     end
 
     # Define permission grants
-    Grantinee::Engine::WHITELISTED_KINDS.each do |kind|
+    Engine::WHITELISTED_KINDS.each do |kind|
       define_method(kind.to_sym) do |table, fields = []|
         logger.debug "Got table: #{table}, fields: #{fields}"
 
