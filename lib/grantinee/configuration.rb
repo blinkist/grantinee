@@ -25,11 +25,11 @@ module Grantinee
     end
 
     def configured?
-      self.username.present? &&
-        self.password.present? &&
-        self.hostname.present? &&
-        self.port.present? &&
-        self.database.present?
+      self.username &&
+        self.password &&
+        self.hostname &&
+        self.port &&
+        self.database
     end
 
     # Handle url -> fields conversion
