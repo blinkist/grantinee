@@ -110,7 +110,7 @@ module Grantinee
         require options[:config]
       end
 
-      unless Gratinee.configuration.configured?
+      unless Grantinee.configuration.configured?
         Grantinee::Engine.detect_active_record_connection!
       end
     end
