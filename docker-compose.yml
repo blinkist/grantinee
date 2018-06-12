@@ -20,9 +20,13 @@ services:
       - POSTGRES_PASSWORD=postgres
 
   rspec:
+    environment:
+      MYSQL_HOST: 'mysql'
+      POSTGRES_HOST: 'postgres'
     tty: true
     stdin_open: true
     build: .
+    # command: ["bin/wait-for-it.sh postgres:5432", "bin/wait-for-it.sh mysql:3306", "--", "bundle exec rspec"]
     command: bundle exec rspec
     volumes:
       - .:/myapp

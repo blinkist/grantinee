@@ -1,12 +1,12 @@
 # This is a sample configuration file for you to play with
 Grantinee.configure do |c|
-  c.engine = :mysql
+  c.engine = :postgresql
 
   case c.engine
   when :mysql
     c.username = 'root'
     c.password = 'mysql'
-    c.hostname = 'localhost'
+    c.hostname = ENV['MYSQL_HOST'] || 'localhost'
     c.port     = 3306
     c.database = 'grantinee_development'
 
@@ -16,7 +16,7 @@ Grantinee.configure do |c|
   when :postgresql
     c.username = 'postgres'
     c.password = 'postgres'
-    c.hostname = 'localhost'
+    c.hostname = ENV['POSTGRES_HOST'] || 'localhost'
     c.port     = 5432
     c.database = 'grantinee_development'
 
