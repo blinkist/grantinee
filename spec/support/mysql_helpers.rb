@@ -6,13 +6,14 @@ require "yaml"
 module MysqlHelpers
   class Mysql
     def initialize(user: nil, password: nil, database: nil)
-      configuration = YAML.safe_load(File.read("spec/fixtures/config_mysql.yml"))
+      load "./spec/fixtures/config_mysql.rb"
 
+      p Grantinee.configuration
       @client = Mysql2::Client.new(
         username: user,
         password: password,
-        host:     configuration["hostname"],
-        port:     configuration["port"],
+        host:     Grantinee.configuration.hostname,
+        port:     Grantinee.configuration.port,
         database: database
       )
     end

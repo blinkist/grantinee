@@ -6,13 +6,13 @@ require "yaml"
 module PostgresqlHelpers
   class Postgresql
     def initialize(user: nil, password: nil, database: nil)
-      configuration = YAML.safe_load(File.read("spec/fixtures/config_postgresql.yml"))
+      load "./spec/fixtures/config_postgresql.rb"
 
       @client = PG::Connection.open(
         user:     user,
         password: password,
-        host:     configuration["hostname"],
-        port:     configuration["port"],
+        host:     Grantinee.configuration.hostname,
+        port:     Grantinee.configuration.port,
         dbname:   database
       )
     end

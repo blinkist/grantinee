@@ -9,18 +9,20 @@ RSpec.shared_context "mysql database" do
 
   # NOTE: the actual client that we assign permissions for
   let(:mysql_client) do
-    configuration = YAML.safe_load(File.read("spec/fixtures/config_mysql.yml"))
+    load "./spec/fixtures/config_mysql.rb"
 
     Mysql2::Client.new(
       username: user,
       password: "secret",
-      host:     configuration["hostname"],
-      port:     configuration["port"],
-      database: configuration["database"]
+      host:     Grantinee.configuration.hostname,
+      port:     Grantinee.configuration.port,
+      database: Grantinee.configuration.database
     )
   end
 
   before do
+    load "./spec/fixtures/config_mysql.rb"
+
     mysql_admin = MysqlHelpers::Mysql.new(user: "root", password: "mysql")
     mysql_admin.create_database(database)
     mysql_admin.create_role(user, "secret")
