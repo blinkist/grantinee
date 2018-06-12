@@ -7,6 +7,10 @@
 /spec/reports/
 /tmp/
 
+# Docker compose stuffs
+mysql
+postgres
+
 # rspec failure tracking
 .rspec_status
 .byebug_history

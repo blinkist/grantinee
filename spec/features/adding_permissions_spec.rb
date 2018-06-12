@@ -8,7 +8,7 @@ require "support/query_helpers"
 
 def db_error_args
   {
-    mysql: [Mysql2::Error, /command denied to user/],
+    mysql: [Mysql2::Error, /denied to user/],
     postgresql: [PG::InsufficientPrivilege]
   }
 end
@@ -17,7 +17,7 @@ RSpec.describe "Adding permissions" do
   include QueryHelpers
 
   context "when a permissions file exists with defined permissions" do
-    subject { `grantinee -f #{permissions_file} #{config}` }
+    subject { `exe/grantinee -f #{permissions_file} #{config}` }
 
     let(:user) { "my_user" }
 
@@ -25,7 +25,7 @@ RSpec.describe "Adding permissions" do
 
     %i[mysql postgresql].each do |db_type|
       context "for #{db_type}" do
-        let(:config) { "-c spec/fixtures/config_#{db_type}.yml" }
+        let(:config) { "-c ./spec/fixtures/config_#{db_type}.rb" }
         let(:raised_error_args) { db_error_args[db_type] }
 
         include_context "#{db_type} database"

@@ -6,10 +6,6 @@ require 'mysql2'
 module Grantinee
   module Engine
     class Mysql < AbstractEngine
-      def sanitize_value(value)
-        @connection.escape value
-      end
-
       def initialize
         configuration = Grantinee.configuration
 
@@ -22,28 +18,67 @@ module Grantinee
         )
       end
 
-      def revoke_permissions!(data)
-        query = format('REVOKE ALL PRIVILEGES, GRANT OPTION FROM %{user};', sanitize(data))
-        begin
-          run! query
-        rescue StandardError
-          # MySQL freaks out when there are no grants yet...
-        end
-      end
-
-      def grant_permission!(data)
-        query = if data[:fields].empty?
-                  "GRANT %{kind} ON %{table} TO '%{user}'@'%{host}';"
-                else
-                  "GRANT %{kind}(%{fields}) ON %{table} TO '%{user}'@'%{host}';"
-        end % sanitize(data)
+      def flush_permissions!
+        query = "FLUSH PRIVILEGES;"
 
         run! query
       end
 
-      def run!(query)
-        puts query if Grantinee.configuration.verbose
-        @connection.query query
+      def revoke_permissions!(data)
+        database = sanitize_column_name(data[:database])
+        user     = sanitize_column_name(data[:user])
+        host     = sanitize_column_name(data[:host])
+
+        query = "REVOKE ALL PRIVILEGES ON #{database}.* FROM #{user}@#{host};"
+        run! query, data
+      end
+
+      def grant_permission!(data) # rubocop:disable Metrics/AbcSize
+        database = sanitize_column_name(data[:database])
+        kind     = sanitize_value(data[:kind])
+        table    = sanitize_table_name(data[:table])
+        user     = sanitize_column_name(data[:user])
+        host     = sanitize_column_name(data[:host])
+        fields   = data[:fields].map { |v| sanitize_column_name(v.to_s) }.join(', ')
+
+        query = if data[:fields].empty?
+                  "GRANT #{kind} ON #{database}.#{table} TO #{user}@#{host};"
+                else
+                  "GRANT #{kind}(#{fields}) ON #{database}.#{table} TO #{user}@#{host};"
+                end
+        run! query, data
+      end
+
+      private
+
+      def sanitize_value(value)
+        @connection.escape value
+      end
+
+      def sanitize_column_name(name)
+        "`#{name.to_s.gsub('`', '``')}`"
+      end
+
+      def sanitize_table_name(name)
+        sanitize_column_name(name).gsub('.', '`.`')
+      end
+
+      def run!(query, data = {})
+        logger.info query
+
+        begin
+          @connection.query query
+        rescue ::Mysql2::Error => e
+          case e.error_number
+          when 1141, 1269 # Can't revoke all privileges for one or more of the requested users
+            logger.debug format("User %{user}@%{host} doesn't have any grants yet", data)
+          when 1133 # Can't find any matching row in the user table
+            logger.fatal format("User %{user}@%{host} doesn't exist yet, create it with \"CREATE USER '%{user}'@'%{host}';\" first", data) # rubocop:disable Metrics/LineLength
+          else
+            logger.debug e.error_number
+            raise e
+          end
+        end
       end
     end
   end

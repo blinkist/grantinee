@@ -3,41 +3,45 @@
 module Grantinee
   module Engine
     class AbstractEngine
+      NOT_IMPLEMENTED = "Not implemented".freeze
+
+      def logger
+        Grantinee.logger
+      end
+
       def initialize
-        raise 'Not implemented'
+        raise NOT_IMPLEMENTED
+      end
+
+      def flush_permissions!
+        raise NOT_IMPLEMENTED
       end
 
       def revoke_permissions!(_data)
-        raise 'Not implemented'
+        raise NOT_IMPLEMENTED
       end
 
       def grant_permission!(_data)
-        raise 'Not implemented'
+        raise NOT_IMPLEMENTED
       end
 
-      def run!(_query)
-        raise 'Not implemented'
+      def run!(_query, _data = {})
+        raise NOT_IMPLEMENTED
       end
 
       # Sanitize one value piece
-      def sanitize_value
-        raise 'Not implemented'
+      def sanitize_value(_value)
+        raise NOT_IMPLEMENTED
       end
 
-      # Sanitize the data
-      # Escapes values that are strings or symbols
-      # Escapes each value from an array
-      def sanitize(data)
-        data.each do |key, value|
-          data[key] = case value
-          when String, Symbol
-            sanitize_value(value.to_s)
-          when Array
-            value.map { |v| sanitize_value(v.to_s) }
-          else
-            raise "Unsupported data type: #{value.class}"
-          end
-        end
+      # Sanitize column name
+      def sanitize_column_name(_name)
+        raise NOT_IMPLEMENTED
+      end
+
+      # Sanitize table name
+      def sanitize_table_name(_name)
+        raise NOT_IMPLEMENTED
       end
     end
   end
