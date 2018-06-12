@@ -38,7 +38,7 @@ module Grantinee
     end
 
     # Define permission grants
-    %w[all usage select insert update].each do |kind|
+    Grantinee::Engine::WHITELISTED_KINDS.each do |kind|
       define_method(kind.to_sym) do |table, fields = []|
         logger.debug "Got table: #{table}, fields: #{fields}"
 

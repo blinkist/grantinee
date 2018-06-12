@@ -2,6 +2,8 @@
 
 module Grantinee
   module Engine
+    WHITELISTED_KINDS = %w[all usage select update insert].freeze
+
     class << self
       # Get appropriate engine class for the engine name
       def for(engine)
