@@ -13,6 +13,19 @@ def db_error_args
   }
 end
 
+# NOTE: because of the RIDICULOUS nature of how I built the permissions helper,
+# permissions need to be defined by themselves per line, i.e.
+#
+# TODO: refactor this :)
+#
+# BAD:
+#   let(:permissions) { -> { update :users } }
+#
+# GOOD:
+#   let(:permissions) do
+#     -> { update :users }
+#   end
+#
 RSpec.describe "DSL specs" do
   include QueryHelpers
 
