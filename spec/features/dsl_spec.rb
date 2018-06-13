@@ -37,7 +37,7 @@ RSpec.describe "DSL specs" do
 
         before { subject }
 
-        [["my_user"], ["my_user", "your_user"]].each do |context_users|
+        [["my_user"], %w[my_user your_user]].each do |context_users|
           context "with #{context_users.count} users" do
             let(:users) { context_users }
 

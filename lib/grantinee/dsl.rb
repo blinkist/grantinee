@@ -54,7 +54,7 @@ module Grantinee
         @permissions << @data.merge(
           kind:   kind,
           table:  table,
-          fields: fields,
+          fields: fields
         ).merge(@current_user)
       end
     end

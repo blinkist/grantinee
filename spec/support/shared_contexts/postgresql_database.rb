@@ -30,7 +30,7 @@ RSpec.shared_context "postgresql database" do
     users.each do |user|
       pg_admin.create_role(user, "fake_password")
     end
-    
+
     pg_admin.close
 
     db_admin = PostgresqlHelpers::Postgresql.new(options.merge(database: database))

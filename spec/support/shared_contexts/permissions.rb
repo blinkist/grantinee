@@ -6,7 +6,7 @@ require "support/permissions_helpers"
 RSpec.shared_context "permissions" do
   let(:permissions_file) { defined?(super()) ? super() : "Grantinee.test" }
   let(:database) { defined?(super()) ? super() : "grantinee_test" }
-  let(:users) { defined?(super()) ? super() : ["dude", "dudette"] }
+  let(:users) { defined?(super()) ? super() : %w[dude dudette] }
 
   # NOTE: default permissions
   let(:permissions) do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Grantinee
   class Executor
     def initialize(dsl, engine)

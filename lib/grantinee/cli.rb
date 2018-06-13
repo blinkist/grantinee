@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Grantinee
   class CLI
     attr_accessor :options
@@ -105,14 +107,10 @@ module Grantinee
     end
 
     # Database configuration file
-    def process_database_param # rubocop:disable Style/GuardClause Style/IfUnlessModifier
-      if options[:config]
-        require options[:config]
-      end
+    def process_database_param
+      require options[:config] if options[:config]
 
-      unless Grantinee.configuration.configured?
-        Grantinee::Engine.detect_active_record_connection!
-      end
+      Grantinee::Engine.detect_active_record_connection! unless Grantinee.configuration.configured?
     end
 
     # Grantinee file

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Grantinee.configure do |c|
   c.engine = :postgresql
   c.username = 'postgres'

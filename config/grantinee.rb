@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This is a sample configuration file for you to play with
 Grantinee.configure do |c|
   c.engine = :postgresql
