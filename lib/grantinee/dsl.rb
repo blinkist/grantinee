@@ -33,17 +33,12 @@ module Grantinee
     # Define user and host
     # Note: revokes all permissions for given user first
     def user(user, &block)
-      old_user = @current_user
-
       logger.debug "Got user: #{user}"
 
       @data[:user], @data[:host] = user.to_s.split '@'
       @data[:host] ||= '%'
 
-      @current_user = @data
       instance_eval(&block) if block_given?
-    ensure
-      @current_user = old_user
     end
 
     # Define permission grants
@@ -55,7 +50,7 @@ module Grantinee
           kind:   kind,
           table:  table,
           fields: fields
-        ).merge(@current_user)
+        )
       end
     end
 
