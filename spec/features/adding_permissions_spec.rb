@@ -19,7 +19,7 @@ RSpec.describe "Adding permissions" do
   context "when a permissions file exists with defined permissions" do
     subject { `exe/grantinee -f #{permissions_file} #{config}` }
 
-    let(:user) { "my_user" }
+    let(:users) { ["my_user"] }
 
     include_context "permissions file"
 
