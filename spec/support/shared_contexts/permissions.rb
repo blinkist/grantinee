@@ -12,7 +12,7 @@ RSpec.shared_context "permissions" do
   let(:permissions) do
     lambdas = []
     lambdas.push(
-      -> { select :users, %i[id anonymized] } 
+      -> { select :users, %i[id anonymized] }
     )
     lambdas.push(
       -> { select :users, %i[id anonymized email.primary] }

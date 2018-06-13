@@ -169,7 +169,7 @@ RSpec.describe "DSL specs" do
                 let(:permissions) do
                   lambdas = []
                   lambdas.push(
-                    -> { select :users, %i[id anonymized] } 
+                    -> { select :users, %i[id anonymized] }
                   )
                   lambdas.push(
                     -> { update :users }
