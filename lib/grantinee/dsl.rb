@@ -6,15 +6,19 @@ module Grantinee
 
     # Allow evaluation of the code coming from the Grantinee file
     def self.eval(commands)
-      new { eval(commands, binding) }
+      new.tap do |x|
+        x.eval(commands)
+      end
     end
 
-    # Initialize defaults and start processing
-    def initialize(&block)
+    # Initialize defaults
+    def initialize
       @permissions = []
       @data        = {}
+    end
 
-      instance_eval(&block)
+    def eval(commands)
+      instance_eval(commands)
     end
 
     # Define database and mode

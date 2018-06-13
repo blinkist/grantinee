@@ -13,6 +13,19 @@ def db_error_args
   }
 end
 
+# NOTE: because of the RIDICULOUS nature of how I built the permissions helper,
+# permissions need to be defined by themselves per line, i.e.
+#
+# TODO: refactor this :)
+#
+# BAD:
+#   let(:permissions) { -> { update :users } }
+#
+# GOOD:
+#   let(:permissions) do
+#     -> { update :users }
+#   end
+#
 RSpec.describe "DSL specs" do
   include QueryHelpers
 
@@ -21,8 +34,6 @@ RSpec.describe "DSL specs" do
 
     let(:dsl) { Grantinee::Dsl.eval(permissions_code) }
     let(:engine) { Grantinee::Engine.for(db_type) }
-
-    let(:user) { "my_user" }
 
     include_context "permissions"
 
@@ -39,114 +50,189 @@ RSpec.describe "DSL specs" do
 
         before { subject }
 
-        context "when the user can select all fields" do
-          let(:permissions) do
-            -> { select :users, %i[id anonymized] }
-          end
+        [["my_user"], %w[my_user your_user]].each do |context_users|
+          context "with #{context_users.count} users" do
+            let(:users) { context_users }
 
-          it "cannot insert records" do
-            expect { query(db_type, :insert) }.to raise_error(*raised_error_args)
-          end
+            context "when the user can select all fields" do
+              let(:permissions) do
+                context_users.map do
+                  -> { select :users, %i[id anonymized] }
+                end
+              end
 
-          it "can select records" do
-            expect { query(db_type, :select) }.not_to raise_error
-          end
+              it "cannot insert records" do
+                expect { query(db_type, :insert) }.to raise_error(*raised_error_args)
+              end
 
-          it "cannot update records" do
-            expect { query(db_type, :update) }.to raise_error(*raised_error_args)
-          end
+              it "can select records" do
+                expect { query(db_type, :select) }.not_to raise_error
+              end
 
-          it "cannot delete records" do
-            expect { query(db_type, :delete) }.to raise_error(*raised_error_args)
-          end
-        end
+              it "cannot update records" do
+                expect { query(db_type, :update) }.to raise_error(*raised_error_args)
+              end
 
-        context "when the user can insert records for a table" do
-          let(:permissions) do
-            -> { insert :users }
-          end
+              it "cannot delete records" do
+                expect { query(db_type, :delete) }.to raise_error(*raised_error_args)
+              end
+            end
 
-          it "can insert records" do
-            expect { query(db_type, :insert) }.not_to raise_error
-          end
+            context "when the user can insert records for a table" do
+              let(:permissions) do
+                context_users.map do
+                  -> { insert :users }
+                end
+              end
 
-          it "cannot select records" do
-            expect { query(db_type, :select) }.to raise_error(*raised_error_args)
-          end
+              it "can insert records" do
+                expect { query(db_type, :insert) }.not_to raise_error
+              end
 
-          it "cannot update records" do
-            expect { query(db_type, :update) }.to raise_error(*raised_error_args)
-          end
+              it "cannot select records" do
+                expect { query(db_type, :select) }.to raise_error(*raised_error_args)
+              end
 
-          it "cannot delete records" do
-            expect { query(db_type, :delete) }.to raise_error(*raised_error_args)
-          end
-        end
+              it "cannot update records" do
+                expect { query(db_type, :update) }.to raise_error(*raised_error_args)
+              end
 
-        context "when the user can update records in a table" do
-          let(:permissions) do
-            -> { update :users }
-          end
+              it "cannot delete records" do
+                expect { query(db_type, :delete) }.to raise_error(*raised_error_args)
+              end
+            end
 
-          it "cannot insert records" do
-            expect { query(db_type, :insert) }.to raise_error(*raised_error_args)
-          end
+            context "when the user can update records in a table" do
+              let(:permissions) do
+                context_users.map do
+                  -> { update :users }
+                end
+              end
 
-          it "cannot select records" do
-            expect { query(db_type, :select) }.to raise_error(*raised_error_args)
-          end
+              it "cannot insert records" do
+                expect { query(db_type, :insert) }.to raise_error(*raised_error_args)
+              end
 
-          it "can update records" do
-            expect { query(db_type, :update) }.not_to raise_error
-          end
+              it "cannot select records" do
+                expect { query(db_type, :select) }.to raise_error(*raised_error_args)
+              end
 
-          it "cannot delete records" do
-            expect { query(db_type, :delete) }.to raise_error(*raised_error_args)
-          end
-        end
+              it "can update records" do
+                expect { query(db_type, :update) }.not_to raise_error
+              end
 
-        # TODO: delete records
-        context "when the user can delete records from a table" do
-          let(:permissions) do
-            -> { delete :users }
-          end
+              it "cannot delete records" do
+                expect { query(db_type, :delete) }.to raise_error(*raised_error_args)
+              end
+            end
 
-          xit "cannot insert records" do
-            expect { query(db_type, :insert) }.to raise_error(*raised_error_args)
-          end
+            # TODO: delete records
+            context "when the user can delete records from a table" do
+              let(:permissions) do
+                context_users.map do
+                  -> { delete :users }
+                end
+              end
 
-          xit "cannot select records" do
-            expect { query(db_type, :select) }.to raise_error(*raised_error_args)
-          end
+              xit "cannot insert records" do
+                expect { query(db_type, :insert) }.to raise_error(*raised_error_args)
+              end
 
-          xit "cannot update records" do
-            expect { query(db_type, :update) }.to raise_error(*raised_error_args)
-          end
+              xit "cannot select records" do
+                expect { query(db_type, :select) }.to raise_error(*raised_error_args)
+              end
 
-          xit "can delete records" do
-            expect { query(db_type, :delete) }.not_to raise_error
-          end
-        end
+              xit "cannot update records" do
+                expect { query(db_type, :update) }.to raise_error(*raised_error_args)
+              end
 
-        context "when the user can do all for a table" do
-          let(:permissions) do
-            -> { all :users }
-          end
+              xit "can delete records" do
+                expect { query(db_type, :delete) }.not_to raise_error
+              end
+            end
 
-          it "can insert records" do
-            expect { query(db_type, :insert) }.not_to raise_error
-          end
+            context "when the user can do all for a table" do
+              let(:permissions) do
+                context_users.map do
+                  -> { all :users }
+                end
+              end
 
-          it "can select records" do
-            expect { query(db_type, :select) }.not_to raise_error
-          end
+              it "can insert records" do
+                expect { query(db_type, :insert) }.not_to raise_error
+              end
 
-          it "can update records" do
-            expect { query(db_type, :update) }.not_to raise_error
-          end
+              it "can select records" do
+                expect { query(db_type, :select) }.not_to raise_error
+              end
 
-          it "can delete records" do
-            expect { query(db_type, :delete) }.not_to raise_error
+              it "can update records" do
+                expect { query(db_type, :update) }.not_to raise_error
+              end
+
+              it "can delete records" do
+                expect { query(db_type, :delete) }.not_to raise_error
+              end
+            end
+
+            if context_users.count == 2
+              context "when one user can only select, and one can only update" do
+                let(:user_1) { context_users[0] }
+                let(:user_2) { context_users[1] }
+                let(:permissions) do
+                  lambdas = []
+                  lambdas.push(
+                    -> { select :users, %i[id anonymized] }
+                  )
+                  lambdas.push(
+                    -> { update :users }
+                  )
+                  lambdas
+                end
+
+                describe "the first user" do
+                  # the database helpers rely on `user` first, then `users.first`
+                  let(:user) { user_1 }
+
+                  it "cannot insert records" do
+                    expect { query(db_type, :insert) }.to raise_error(*raised_error_args)
+                  end
+
+                  it "can select records" do
+                    expect { query(db_type, :select) }.not_to raise_error
+                  end
+
+                  it "cannot update records" do
+                    expect { query(db_type, :update) }.to raise_error(*raised_error_args)
+                  end
+
+                  it "cannot delete records" do
+                    expect { query(db_type, :delete) }.to raise_error(*raised_error_args)
+                  end
+                end
+
+                describe "the second user" do
+                  # the database helpers rely on `user` first, then `users.first`
+                  let(:user) { user_2 }
+
+                  it "cannot insert records" do
+                    expect { query(db_type, :insert) }.to raise_error(*raised_error_args)
+                  end
+
+                  it "cannot select records" do
+                    expect { query(db_type, :select) }.to raise_error(*raised_error_args)
+                  end
+
+                  it "can update records" do
+                    expect { query(db_type, :update) }.not_to raise_error
+                  end
+
+                  it "cannot delete records" do
+                    expect { query(db_type, :delete) }.to raise_error(*raised_error_args)
+                  end
+                end
+              end
+            end
           end
         end
       end

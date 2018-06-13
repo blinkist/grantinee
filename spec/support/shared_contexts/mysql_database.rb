@@ -12,7 +12,7 @@ RSpec.shared_context "mysql database" do
     load "./spec/fixtures/config_mysql.rb"
 
     Mysql2::Client.new(
-      username: user,
+      username: (defined?(user) ? user : users.first),
       password: "secret",
       host:     Grantinee.configuration.hostname,
       port:     Grantinee.configuration.port,
@@ -25,7 +25,10 @@ RSpec.shared_context "mysql database" do
 
     mysql_admin = MysqlHelpers::Mysql.new(user: "root", password: "mysql")
     mysql_admin.create_database(database)
-    mysql_admin.create_role(user, "secret")
+    users.each do |user|
+      mysql_admin.create_role(user, "secret")
+    end
+
     mysql_admin.close
 
     db_admin = MysqlHelpers::Mysql.new(user: "root", password: "mysql", database: database)
