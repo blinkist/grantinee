@@ -8,7 +8,6 @@ module MysqlHelpers
     def initialize(user: nil, password: nil, database: nil)
       load "./spec/fixtures/config_mysql.rb"
 
-      p Grantinee.configuration
       @client = Mysql2::Client.new(
         username: user,
         password: password,
