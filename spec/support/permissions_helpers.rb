@@ -3,6 +3,7 @@
 require "method_source"
 require "byebug"
 
+# TODO: refactor this bs to use meta programming to call DSL using a "spec translator"
 module Permissions
   class Code
     class << self

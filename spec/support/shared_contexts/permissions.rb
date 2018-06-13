@@ -10,10 +10,14 @@ RSpec.shared_context "permissions" do
 
   # NOTE: default permissions
   let(:permissions) do
-    [
-      -> { select :users, %i[id anonymized] },
+    lambdas = []
+    lambdas.push(
+      -> { select :users, %i[id anonymized] } 
+    )
+    lambdas.push(
       -> { select :users, %i[id anonymized email.primary] }
-    ]
+    )
+    lambdas
   end
 
   let(:permissions_code) do

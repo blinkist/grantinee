@@ -161,6 +161,65 @@ RSpec.describe "DSL specs" do
                 expect { query(db_type, :delete) }.not_to raise_error
               end
             end
+
+            if context_users.count == 2
+              context "when one user can only select, and one can only update" do
+                let(:user_1) { context_users[0] }
+                let(:user_2) { context_users[1] }
+                let(:permissions) do
+                  lambdas = []
+                  lambdas.push(
+                    -> { select :users, %i[id anonymized] } 
+                  )
+                  lambdas.push(
+                    -> { update :users }
+                  )
+                  lambdas
+                end
+
+                describe "the first user" do
+                  # the database helpers rely on `user` first, then `users.first`
+                  let(:user) { user_1 }
+
+                  it "cannot insert records" do
+                    expect { query(db_type, :insert) }.to raise_error(*raised_error_args)
+                  end
+
+                  it "can select records" do
+                    expect { query(db_type, :select) }.not_to raise_error
+                  end
+
+                  it "cannot update records" do
+                    expect { query(db_type, :update) }.to raise_error(*raised_error_args)
+                  end
+
+                  it "cannot delete records" do
+                    expect { query(db_type, :delete) }.to raise_error(*raised_error_args)
+                  end
+                end
+
+                describe "the second user" do
+                  # the database helpers rely on `user` first, then `users.first`
+                  let(:user) { user_2 }
+
+                  it "cannot insert records" do
+                    expect { query(db_type, :insert) }.to raise_error(*raised_error_args)
+                  end
+
+                  it "cannot select records" do
+                    expect { query(db_type, :select) }.to raise_error(*raised_error_args)
+                  end
+
+                  it "can update records" do
+                    expect { query(db_type, :update) }.not_to raise_error
+                  end
+
+                  it "cannot delete records" do
+                    expect { query(db_type, :delete) }.to raise_error(*raised_error_args)
+                  end
+                end
+              end
+            end
           end
         end
       end

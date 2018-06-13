@@ -12,7 +12,7 @@ RSpec.shared_context "mysql database" do
     load "./spec/fixtures/config_mysql.rb"
 
     Mysql2::Client.new(
-      username: users.first,
+      username: (defined?(user) ? user : users.first),
       password: "secret",
       host:     Grantinee.configuration.hostname,
       port:     Grantinee.configuration.port,
