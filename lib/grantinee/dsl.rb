@@ -6,15 +6,19 @@ module Grantinee
 
     # Allow evaluation of the code coming from the Grantinee file
     def self.eval(commands)
-      new { eval(commands, binding) }
+      new.tap do |x|
+        x.eval(commands)
+      end
     end
 
-    # Initialize defaults and start processing
-    def initialize(&block)
+    # Initialize defaults
+    def initialize
       @permissions = []
       @data        = {}
+    end
 
-      instance_eval(&block)
+    def eval(commands)
+      instance_eval(commands)
     end
 
     # Define database and mode
@@ -29,12 +33,17 @@ module Grantinee
     # Define user and host
     # Note: revokes all permissions for given user first
     def user(user, &block)
+      old_user = @current_user
+
       logger.debug "Got user: #{user}"
 
       @data[:user], @data[:host] = user.to_s.split '@'
       @data[:host] ||= '%'
 
+      @current_user = @data
       instance_eval(&block) if block_given?
+    ensure
+      @current_user = old_user
     end
 
     # Define permission grants
@@ -45,8 +54,8 @@ module Grantinee
         @permissions << @data.merge(
           kind:   kind,
           table:  table,
-          fields: fields
-        )
+          fields: fields,
+        ).merge(@current_user)
       end
     end
 
