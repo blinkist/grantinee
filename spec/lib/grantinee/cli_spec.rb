@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "spec_helper"
+require "byebug"
 
 module Grantinee
   RSpec.shared_examples "a Grantinee setup class" do
@@ -15,7 +16,9 @@ module Grantinee
 
   RSpec.describe CLI do
     describe "#run!" do
-      subject { described_class.new(args).run! }
+      subject { described_class.new(args, fake_logger).run! }
+
+      let(:fake_logger) { double ::Logger, debug: nil, info: nil, warn: nil }
 
       context "in a non-rails context" do
         context "with no arguments" do
@@ -54,6 +57,57 @@ module Grantinee
               expect { subject }.to raise_error(LoadError)
             end
           end
+        end
+
+        context "with the help argument" do
+          let(:args) { ["-h"] }
+
+          it "exits the program" do
+            expect { subject }.to raise_error SystemExit
+          end
+
+          context "when running" do
+            after do
+              begin
+                subject
+              rescue SystemExit
+              end
+            end
+
+            it "does not do anything with a dsl" do
+              expect_any_instance_of(CLI).to_not receive(:build_dsl)
+            end
+
+            it "does not do anything with an engine" do
+              expect_any_instance_of(CLI).to_not receive(:build_engine)
+            end
+
+            it "does not do anything with an executor" do
+              expect_any_instance_of(CLI).to_not receive(:build_executor)
+            end
+
+            it "does not run any executor" do
+              expect_any_instance_of(Executor).to_not receive(:run!)
+            end
+          end
+        end
+
+        context "with the verbosity argument" do
+          let(:args) { ["-v"] }
+
+          # TODO
+        end
+
+        context "with the require (application booth path) argument" do
+          let(:args) { ["-r"] }
+
+          # TODO
+        end
+
+        context "with the premissions file path argument" do
+          let(:args) { ["-f"] }
+
+          # TODO
         end
       end
     end
