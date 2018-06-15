@@ -120,9 +120,35 @@ module Grantinee
         end
 
         context "with the require (application booth path) argument" do
-          let(:args) { ["-r"] }
+          let(:args) { default_args << ["-r", application_boot_path] }
 
-          # TODO
+          context "when no application boot path is passed" do
+            let(:args) { default_args << ["-r"] }
+
+            it_behaves_like "a Grantinee setup class"
+          end
+
+          context "when an application boot path is passed" do
+            context "when the boot path is valid" do
+              # NOTE: I'm just using the config_mysql rb file since we only test
+              # if the file gets required.
+              let(:application_boot_path) { "spec/fixtures/config_mysql" }
+
+              it "requires the file" do
+                expect_any_instance_of(described_class).to receive(:require)
+                  .with("./#{application_boot_path}.rb")
+                subject
+              end
+
+              it_behaves_like "a Grantinee setup class"
+            end
+
+            context "when the boot path is invalid" do
+              let(:application_boot_path) { "invalid_path" }
+
+              it_behaves_like "a Grantinee setup class"
+            end
+          end
         end
 
         context "with the premissions file path argument" do
