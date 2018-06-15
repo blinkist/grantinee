@@ -98,7 +98,7 @@ module Grantinee
           let(:args) { default_args << ["-v"] }
 
           def log_level(name)
-            %i[debug info warn error fatal].index(name.to_sym)
+            %w[debug info warn error fatal].index(name)
           end
 
           context "with no -v option passed" do
@@ -107,23 +107,16 @@ module Grantinee
             it_behaves_like "a Grantinee setup class"
           end
 
-          context "with a debug option passed" do
-            let(:args) { ["-v", "debug"] }
+          %w[debug info warn error fatal].each do |level|
+            context "with a -v #{level} option passed" do
+              let(:args) { ["-v", level] }
 
-            before { expect(fake_logger).to receive(:level=).with(log_level(:debug)) }
-
-            it_behaves_like "a Grantinee setup class"
+              it "sets the logger level to #{level}" do
+                expect(fake_logger).to receive(:level=).with(log_level(level))
+                subject
+              end
+            end
           end
-
-          context "with a info option passed" do
-            let(:args) { ["-v", "info"] }
-
-            before { expect(fake_logger).to receive(:level=).with(log_level(:info)) }
-
-            it_behaves_like "a Grantinee setup class"
-          end
-
-          # ...
         end
 
         context "with the require (application booth path) argument" do
