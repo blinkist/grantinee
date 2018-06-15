@@ -18,7 +18,16 @@ module Grantinee
     describe "#run!" do
       subject { described_class.new(args, fake_logger).run! }
 
+      let(:executor) { Executor.new(nil, nil) }
       let(:fake_logger) { double ::Logger, debug: nil, info: nil, warn: nil }
+      let(:default_args) { ["-c", config_file] }
+      let(:config_file) { "./spec/fixtures/config_mysql.rb" }
+
+      before do
+        allow_any_instance_of(described_class).to receive(:build_executor)
+          .and_return(executor)
+        allow(executor).to receive(:run!)
+      end
 
       context "in a non-rails context" do
         context "with no arguments" do
@@ -36,13 +45,6 @@ module Grantinee
 
           context "when the config file is present" do
             let(:config_file) { "./spec/fixtures/config_mysql.rb" }
-            let(:executor) { Executor.new(nil, nil) }
-
-            before do
-              allow_any_instance_of(described_class).to receive(:build_executor)
-                .and_return(executor)
-              allow(executor).to receive(:run!)
-            end
 
             context "when the config file is sane" do
               it_behaves_like "a Grantinee setup class"
@@ -93,9 +95,35 @@ module Grantinee
         end
 
         context "with the verbosity argument" do
-          let(:args) { ["-v"] }
+          let(:args) { default_args << ["-v"] }
 
-          # TODO
+          def log_level(name)
+            %i[debug info warn error fatal].index(name.to_sym)
+          end
+
+          context "with no -v option passed" do
+            before { expect(fake_logger).to_not receive(:level=) }
+
+            it_behaves_like "a Grantinee setup class"
+          end
+
+          context "with a debug option passed" do
+            let(:args) { ["-v", "debug"] }
+
+            before { expect(fake_logger).to receive(:level=).with(log_level(:debug)) }
+
+            it_behaves_like "a Grantinee setup class"
+          end
+
+          context "with a info option passed" do
+            let(:args) { ["-v", "info"] }
+
+            before { expect(fake_logger).to receive(:level=).with(log_level(:info)) }
+
+            it_behaves_like "a Grantinee setup class"
+          end
+
+          # ...
         end
 
         context "with the require (application booth path) argument" do
