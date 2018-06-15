@@ -21,6 +21,10 @@ Metrics/LineLength:
 Metrics/MethodLength:
   Max: 15
 
+Metrics/ModuleLength:
+  Exclude:
+    - "spec/**/*"
+
 Security/Eval:
   Enabled: false
 
