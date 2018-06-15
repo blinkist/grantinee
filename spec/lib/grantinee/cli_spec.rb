@@ -35,8 +35,8 @@ module Grantinee
 
           # TODO: raise a proper error message here, like: grantinee has not been
           # configured... it's missing x, y, z
-          it "raises an error" do
-            expect { subject }.to raise_error("Engine '' is not supported")
+          it "does not raise an error" do
+            expect { subject }.to_not raise_error
           end
         end
 
