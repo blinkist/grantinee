@@ -120,23 +120,26 @@ module Grantinee
         end
 
         context "with the require (application booth path) argument" do
-          let(:args) { default_args << ["-r", application_boot_path] }
+          let(:args) { (default_args << ["-r", application_boot_path]).flatten }
 
           context "when no application boot path is passed" do
-            let(:args) { default_args << ["-r"] }
+            let(:args) { default_args << "-r" }
 
-            it_behaves_like "a Grantinee setup class"
+            it "raises an error" do
+              expect { subject }.to raise_error OptionParser::MissingArgument
+            end
           end
 
           context "when an application boot path is passed" do
             context "when the boot path is valid" do
               # NOTE: I'm just using the config_mysql rb file since we only test
               # if the file gets required.
-              let(:application_boot_path) { "spec/fixtures/config_mysql" }
+              let(:application_boot_path) { "./spec/fixtures/config_mysql.rb" }
 
               it "requires the file" do
                 expect_any_instance_of(described_class).to receive(:require)
-                  .with("./#{application_boot_path}.rb")
+                  .with(application_boot_path)
+                  .at_least(:once)
                 subject
               end
 
@@ -146,15 +149,44 @@ module Grantinee
             context "when the boot path is invalid" do
               let(:application_boot_path) { "invalid_path" }
 
-              it_behaves_like "a Grantinee setup class"
+              it "raises an error" do
+                expect { subject }.to raise_error LoadError
+              end
             end
           end
         end
 
         context "with the premissions file path argument" do
-          let(:args) { ["-f"] }
+          let(:args) { (default_args << ["-f", permissions_file]).flatten }
 
-          # TODO
+          context "when the permissions file is not passed" do
+            let(:args) { default_args << "-f" }
+
+            it "raises an error" do
+              expect { subject }.to raise_error OptionParser::MissingArgument
+            end
+          end
+
+          context "when the permissions file is passed" do
+            context "when the permissions file exists" do
+              let(:permissions_file) { "spec/fixtures/permissions.test" }
+
+              it "uses the permisisons file" do
+                expect(Dsl).to receive(:eval).with(File.read(permissions_file))
+                subject
+              end
+
+              it_behaves_like "a Grantinee setup class"
+            end
+
+            context "when the permissions file does not exist" do
+              let(:permissions_file) { "spec/fixtures/unknown.rb" }
+
+              it "raises an error" do
+                expect { subject }.to raise_error(Errno::ENOENT)
+              end
+            end
+          end
         end
       end
     end
