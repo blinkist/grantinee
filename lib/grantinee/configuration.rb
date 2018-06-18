@@ -4,8 +4,6 @@ require 'uri'
 
 module Grantinee
   class Configuration
-    SUPPORTED_ENGINES = %w[mysql postgresql].freeze
-
     # Which engine is used by the library?
     attr_accessor :engine
 
@@ -30,16 +28,21 @@ module Grantinee
 
     # Handle url -> fields conversion
     def url=(url)
-      uri = begin
-        URI.parse url
-      rescue URI::InvalidURIError
-        raise 'Invalid database url'
+      uri = URI.parse url
+
+      case uri.scheme
+      when /^mysql/
+        default_port = 3306
+        @engine = :mysql
+      when /^postgres/
+        default_port = 5432
+        @engine = :postgres
       end
 
       @username = uri.user
       @password = uri.password
       @hostname = uri.host
-      @port     = uri.port
+      @port     = uri.port || default_port
       @database = (uri.path || '').split('/').last
     end
   end
