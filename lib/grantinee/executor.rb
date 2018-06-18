@@ -2,7 +2,7 @@
 
 module Grantinee
   class Executor
-    def initialize(dsl, engine)
+    def initialize(dsl, engine = Executor.default_engine)
       @dsl    = dsl
       @engine = engine
     end
@@ -11,6 +11,10 @@ module Grantinee
       revoke_permissions
       grant_permissions
       flush_permissions
+    end
+
+    def self.default_engine
+      Grantinee::Engine.for(Grantinee.configuration.engine)
     end
 
     private
