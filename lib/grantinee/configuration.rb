@@ -7,6 +7,8 @@ module Grantinee
     # Which engine is used by the library?
     attr_accessor :engine
 
+    attr_accessor :logger
+
     # Connection parameters
     attr_accessor :username
     attr_accessor :password
@@ -19,7 +21,7 @@ module Grantinee
     attr_accessor :verbose
 
     def initialize
-      # Do nothing...
+      @logger = ::Logger.new(nil)
     end
 
     def configured?
