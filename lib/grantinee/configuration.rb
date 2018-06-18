@@ -30,16 +30,20 @@ module Grantinee
 
     # Handle url -> fields conversion
     def url=(url)
-      uri = begin
-        URI.parse url
-      rescue URI::InvalidURIError
-        raise 'Invalid database url'
-      end
+      uri = URI.parse url
+
+      default_port = case uri.scheme
+                     when /^mysql/
+                       3306
+                     when /^postgres/
+                       5432
+                     end
 
       @username = uri.user
       @password = uri.password
       @hostname = uri.host
-      @port     = uri.port
+      @port     = uri.port || default_port
+      @engine   = uri.scheme
       @database = (uri.path || '').split('/').last
     end
   end
