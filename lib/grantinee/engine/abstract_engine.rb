@@ -3,7 +3,7 @@
 module Grantinee
   module Engine
     class AbstractEngine
-      NOT_IMPLEMENTED = "Not implemented"
+      NOT_IMPLEMENTED = "Not implemented".freeze
 
       def logger
         Grantinee.logger
