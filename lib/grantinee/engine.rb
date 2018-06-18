@@ -13,11 +13,11 @@ module Grantinee
         end
 
         case engine.to_s
-        when 'mysql'
+        when 'mysql', 'mysql2'
           require 'grantinee/engine/mysql'
           Mysql.new
 
-        when 'postgresql'
+        when 'postgresql', 'pg'
           require 'grantinee/engine/postgresql'
           Postgresql.new
 
