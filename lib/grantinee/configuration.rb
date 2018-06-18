@@ -30,19 +30,14 @@ module Grantinee
     def url=(url)
       uri = URI.parse url
 
-      default_port = case uri.scheme
-                     when /^mysql/
-                       3306
-                     when /^postgres/
-                       5432
-                     end
-
-      @engine   = case uri.scheme
-                  when /^mysql/
-                    :mysql
-                  when /^postgres/
-                    :postgres
-                  end
+      case uri.scheme
+      when /^mysql/
+        default_port = 3306
+        @engine = :mysql
+      when /^postgres/
+        default_port = 5432
+        @engine = :postgres
+      end
 
       @username = uri.user
       @password = uri.password
