@@ -4,8 +4,6 @@ require 'uri'
 
 module Grantinee
   class Configuration
-    SUPPORTED_ENGINES = %w[mysql postgresql].freeze
-
     # Which engine is used by the library?
     attr_accessor :engine
 
@@ -39,11 +37,17 @@ module Grantinee
                        5432
                      end
 
+      @engine   = case uri.scheme
+                  when /^mysql/
+                    :mysql
+                  when /^postgres/
+                    :postgres
+                  end
+
       @username = uri.user
       @password = uri.password
       @hostname = uri.host
       @port     = uri.port || default_port
-      @engine   = uri.scheme
       @database = (uri.path || '').split('/').last
     end
   end

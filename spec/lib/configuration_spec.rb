@@ -11,7 +11,7 @@ module Grantinee
         describe "engine" do
           subject { instance.engine }
 
-          it { is_expected.to eq('mysql2') }
+          it { is_expected.to eq('mysql') }
         end
 
         describe "username" do

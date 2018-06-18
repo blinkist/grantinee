@@ -2,22 +2,24 @@
 
 module Grantinee
   module Engine
+    SUPPORTED_ENGINES = %w[mysql postgresql].freeze
+
     WHITELISTED_KINDS = %w[all usage select update insert].freeze
 
     class << self
       # Get appropriate engine class for the engine name
       def for(engine)
         logger.debug "Using engine: #{engine}"
-        unless Configuration::SUPPORTED_ENGINES.include?(engine.to_s)
-          raise "Engine '#{engine}' is not supported"
+        unless SUPPORTED_ENGINES.include?(engine.to_s)
+          raise "Engine '#{engine}' is not supported, supported engines: #{SUPPORTED_ENGINES}"
         end
 
         case engine.to_s
-        when 'mysql', 'mysql2'
+        when 'mysql'
           require 'grantinee/engine/mysql'
           Mysql.new
 
-        when 'postgresql', 'postgres'
+        when 'postgresql'
           require 'grantinee/engine/postgresql'
           Postgresql.new
 
