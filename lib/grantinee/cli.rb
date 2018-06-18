@@ -85,7 +85,7 @@ module Grantinee
     end
 
     def build_dsl
-      Grantinee.logger = @logger
+      Grantinee.configuration.logger = @logger
       Grantinee::Dsl.eval(File.read(@options[:file]))
     end
 

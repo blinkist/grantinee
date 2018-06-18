@@ -5,8 +5,6 @@ require 'logger'
 # Grantinee module is where the magic at ;-)
 module Grantinee
   class << self
-    attr_accessor :logger
-
     # Allow configuration using a block
     def configure
       yield configuration
@@ -16,6 +14,17 @@ module Grantinee
     def configuration
       @configuration ||= Configuration.new
     end
+
+    def logger
+      configuration.logger
+    end
+
+    def logger=(logger)
+      configuration.logger = logger
+    end
+
+    extend Gem::Deprecate
+    deprecate :logger=, "Please provide logger via configure block", 2018, 7
   end
 end
 
