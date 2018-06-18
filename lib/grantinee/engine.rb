@@ -17,7 +17,7 @@ module Grantinee
           require 'grantinee/engine/mysql'
           Mysql.new
 
-        when 'postgresql', 'pg'
+        when 'postgresql', 'postgres'
           require 'grantinee/engine/postgresql'
           Postgresql.new
 
