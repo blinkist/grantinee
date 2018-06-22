@@ -77,6 +77,35 @@ module Grantinee
 
       describe "#grant_permission!" do
         subject { engine.grant_permission!(data) }
+
+        let(:data) do
+          {
+            user: "billy",
+            host: "127.0.0.1",
+            database: "country",
+            table: "farm",
+            kind: "SELECT",
+            fields: [] # NOTE: we always assume fields is an array
+          }
+        end
+
+        before { expect(client).to receive(:escape).with("SELECT").and_return("SELECT") }
+
+        it "grants permissions for the specified data" do
+          query = "GRANT SELECT ON `country`.`farm` TO `billy`@`127.0.0.1`;"
+          expect(client).to receive(:query).with(query)
+          subject
+        end
+
+        context "with fields data" do
+          let(:data) { super().merge(fields: ["strawberries"]) }
+
+          it "grants permissions for the specified data" do
+            query = "GRANT SELECT(`strawberries`) ON `country`.`farm` TO `billy`@`127.0.0.1`;"
+            expect(client).to receive(:query).with(query)
+            subject
+          end
+        end
       end
     end
   end
