@@ -59,6 +59,20 @@ module Grantinee
 
       describe "#revoke_permissions!" do
         subject { engine.revoke_permissions!(data) }
+
+        let(:data) do
+          {
+            user: "privileged_person",
+            host: "high_horse",
+            database: "bittersville"
+          }
+        end
+
+        it "revokes all privileges for the user" do
+          query = "REVOKE ALL PRIVILEGES ON `bittersville`.* FROM `privileged_person`@`high_horse`;"
+          expect(client).to receive(:query).with(query)
+          subject
+        end
       end
 
       describe "#grant_permission!" do
