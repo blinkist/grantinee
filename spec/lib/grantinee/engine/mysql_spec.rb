@@ -12,6 +12,9 @@ module Grantinee
       before { allow(Grantinee).to receive(:logger).and_return(logger) }
 
       let(:engine) { described_class.new }
+      let(:client) { double :mysql }
+
+      before { allow(Mysql2::Client).to receive(:new).and_return(client) }
 
       describe "::new" do
         subject { engine }
@@ -35,20 +38,23 @@ module Grantinee
                  database: "grantinee_test"
         end
 
-        let(:client) { double :mysql }
-
         before do
           allow(Grantinee).to receive(:configuration).and_return(grantinee_config)
-          expect(Mysql2::Client).to receive(:new).with(db_params).and_return(client)
         end
 
         it "creates a connection to the database" do
+          expect(Mysql2::Client).to receive(:new).with(db_params).and_return(client)
           expect(subject.instance_variable_get(:@connection)).to eq client
         end
       end
 
-      describe "#flush_privileges!" do
-        subject { engine.flush_privileges! }
+      describe "#flush_permissions!" do
+        subject { engine.flush_permissions! }
+
+        it "flushes the privileges for mysql" do
+          expect(client).to receive(:query).with("FLUSH PRIVILEGES;")
+          subject
+        end
       end
 
       describe "#revoke_permissions!" do
