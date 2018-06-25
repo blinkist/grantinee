@@ -1,4 +1,5 @@
 version: 2
+
 jobs:
   build:
     docker:
@@ -30,3 +31,38 @@ jobs:
       - run:
           name: run tests
           command: bundle exec rake
+
+  deploy:
+    docker:
+      - image: circleci/ruby:2.5.1-node-browsers
+    steps:
+      - checkout
+
+      - run:
+          name: Setup Rubygems
+          command: bash .circleci/setup-rubygems.sh
+
+      - run:
+          name: Publish to Rubygems
+          command: |
+            gem build grantinee.gemspec
+            gem push "grantinee-$(git describe --tags | cut -c2-).gem"
+
+workflows:
+  version: 2
+
+  build-and-deploy:
+    jobs:
+      - build:
+          filters:
+            tags:
+              only: /.*/
+
+      - deploy:
+          requires:
+            - build
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
