@@ -110,7 +110,9 @@ module Grantinee
             let(:data) { super().merge(fields: ["strawberries"]) }
 
             it "grants permissions for the specified data" do
-              query = "GRANT SELECT(`strawberries`) ON `country`.`farm` TO 'oldmcdonald'@'127.0.0.1';"
+              query = "GRANT SELECT(`strawberries`) ON `country`.`farm` TO "\
+                      "'oldmcdonald'@'127.0.0.1';"
+
               expect(client).to receive(:query).with(query)
               subject
             end
@@ -130,7 +132,9 @@ module Grantinee
             let(:data) { super().merge(fields: ["strawberries"]) }
 
             it "grants permissions for the specified data" do
-              query = "GRANT SELECT(`strawberries`) ON `country`.`farm` TO 'oldmcdonald'@'127.0.0.1';"
+              query = "GRANT SELECT(`strawberries`) ON `country`.`farm` TO"\
+                      "'oldmcdonald'@'127.0.0.1';"
+
               expect(client).to receive(:query).with(query)
               subject
             end
