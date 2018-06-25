@@ -14,6 +14,37 @@ module Grantinee
     end
   end
 
+  RSpec.shared_examples "an exited grantinee" do
+    it "exits the program" do
+      expect { subject }.to raise_error SystemExit
+    end
+
+    context "when running" do
+      after do
+        begin
+          subject
+        rescue SystemExit
+        end
+      end
+
+      it "does not do anything with a dsl" do
+        expect_any_instance_of(CLI).to_not receive(:build_dsl)
+      end
+
+      it "does not do anything with an engine" do
+        expect_any_instance_of(CLI).to_not receive(:build_engine)
+      end
+
+      it "does not do anything with an executor" do
+        expect_any_instance_of(CLI).to_not receive(:build_executor)
+      end
+
+      it "does not run any executor" do
+        expect_any_instance_of(Executor).to_not receive(:run!)
+      end
+    end
+  end
+
   RSpec.describe CLI do
     describe "#run!" do
       subject { described_class.new(args, fake_logger).run! }
@@ -30,13 +61,20 @@ module Grantinee
       end
 
       context "in a non-rails context" do
+        let(:rescued_subject) do
+          begin
+            subject
+          rescue SystemExit
+          end
+        end
+
         context "with no arguments" do
           let(:args) { [] }
 
-          # TODO: raise a proper error message here, like: grantinee has not been
-          # configured... it's missing x, y, z
-          it "does not raise an error" do
-            expect { subject }.to_not raise_error
+          it_behaves_like "an exited grantinee"
+
+          it "outputs the no config file message" do
+            expect { rescued_subject }.to output(/No configuration file found/).to_stdout
           end
         end
 
@@ -54,9 +92,10 @@ module Grantinee
           context "when the config file is not present" do
             let(:config_file) { "./mysteriously_missing_config.rb" }
 
-            # TODO: raise custom error with nicer message?
-            it "raises an error" do
-              expect { subject }.to raise_error(LoadError)
+            it_behaves_like "an exited grantinee"
+
+            it "outputs the load error message" do
+              expect { rescued_subject }.to output(/cannot load such file/).to_stdout
             end
           end
         end
@@ -64,34 +103,7 @@ module Grantinee
         context "with the help argument" do
           let(:args) { ["-h"] }
 
-          it "exits the program" do
-            expect { subject }.to raise_error SystemExit
-          end
-
-          context "when running" do
-            after do
-              begin
-                subject
-              rescue SystemExit
-              end
-            end
-
-            it "does not do anything with a dsl" do
-              expect_any_instance_of(CLI).to_not receive(:build_dsl)
-            end
-
-            it "does not do anything with an engine" do
-              expect_any_instance_of(CLI).to_not receive(:build_engine)
-            end
-
-            it "does not do anything with an executor" do
-              expect_any_instance_of(CLI).to_not receive(:build_executor)
-            end
-
-            it "does not run any executor" do
-              expect_any_instance_of(Executor).to_not receive(:run!)
-            end
-          end
+          it_behaves_like "an exited grantinee"
         end
 
         context "with the verbosity argument" do
