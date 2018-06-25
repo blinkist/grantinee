@@ -9,15 +9,15 @@ Lint/HandleExceptions:
   Enabled: false
   
 Metrics/AbcSize:
-  Max: 17
-
-Metrics/AbcSize:
-  Max: 17
+  Max: 18
 
 Metrics/BlockLength:
   Exclude:
     - "grantinee.gemspec"
     - "spec/**/*"
+
+Metrics/CyclomaticComplexity:
+  Enabled: false
 
 Metrics/LineLength:
   Max: 100
