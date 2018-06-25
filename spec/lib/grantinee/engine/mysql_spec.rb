@@ -68,8 +68,12 @@ module Grantinee
           }
         end
 
+        before do
+          expect(client).to receive(:escape) { |string| string }.at_least(1).times
+        end
+
         it "revokes all privileges for the user" do
-          query = "REVOKE ALL PRIVILEGES ON `bittersville`.* FROM `privileged_person`@`high_horse`;"
+          query = "REVOKE ALL PRIVILEGES ON `bittersville`.* FROM 'privileged_person'@'high_horse';"
           expect(client).to receive(:query).with(query)
           subject
         end
@@ -80,30 +84,56 @@ module Grantinee
 
         let(:data) do
           {
-            user: "billy",
+            user: "oldmcdonald",
             host: "127.0.0.1",
             database: "country",
             table: "farm",
-            kind: "SELECT",
+            kind: kind,
             fields: [] # NOTE: we always assume fields is an array
           }
         end
 
-        before { expect(client).to receive(:escape).with("SELECT").and_return("SELECT") }
-
-        it "grants permissions for the specified data" do
-          query = "GRANT SELECT ON `country`.`farm` TO `billy`@`127.0.0.1`;"
-          expect(client).to receive(:query).with(query)
-          subject
+        before do
+          expect(client).to receive(:escape) { |string| string }.at_least(1).times
         end
 
-        context "with fields data" do
-          let(:data) { super().merge(fields: ["strawberries"]) }
+        context "with a lowercase permission kind" do
+          let(:kind) { "select" }
 
           it "grants permissions for the specified data" do
-            query = "GRANT SELECT(`strawberries`) ON `country`.`farm` TO `billy`@`127.0.0.1`;"
+            query = "GRANT SELECT ON `country`.`farm` TO 'oldmcdonald'@'127.0.0.1';"
             expect(client).to receive(:query).with(query)
             subject
+          end
+
+          context "with fields data" do
+            let(:data) { super().merge(fields: ["strawberries"]) }
+
+            it "grants permissions for the specified data" do
+              query = "GRANT SELECT(`strawberries`) ON `country`.`farm` TO 'oldmcdonald'@'127.0.0.1';"
+              expect(client).to receive(:query).with(query)
+              subject
+            end
+          end
+        end
+
+        context "with an uppercase permission kind" do
+          let(:kind) { "SELECT" }
+
+          it "grants permissions for the specified data" do
+            query = "GRANT SELECT ON `country`.`farm` TO 'oldmcdonald'@'127.0.0.1';"
+            expect(client).to receive(:query).with(query)
+            subject
+          end
+
+          context "with fields data" do
+            let(:data) { super().merge(fields: ["strawberries"]) }
+
+            it "grants permissions for the specified data" do
+              query = "GRANT SELECT(`strawberries`) ON `country`.`farm` TO 'oldmcdonald'@'127.0.0.1';"
+              expect(client).to receive(:query).with(query)
+              subject
+            end
           end
         end
       end

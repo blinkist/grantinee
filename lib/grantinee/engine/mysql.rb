@@ -34,10 +34,10 @@ module Grantinee
       end
 
       def grant_permission!(data) # rubocop:disable Metrics/AbcSize
-        raise "Invalid permission kind" unless WHITELISTED_KINDS.include?(data[:kind])
+        raise "Invalid permission kind" unless WHITELISTED_KINDS.include?(data[:kind]&.downcase)
 
         database = sanitize_column_name(data[:database])
-        kind     = data[:kind]
+        kind     = data[:kind]&.upcase
         table    = sanitize_table_name(data[:table])
         user     = sanitize_value(data[:user])
         host     = sanitize_value(data[:host])
