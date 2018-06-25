@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    grantinee (0.2.0)
+    grantinee (0.3.1)
 
 GEM
   remote: https://rubygems.org/

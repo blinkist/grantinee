@@ -25,11 +25,11 @@ jobs:
           command: dockerize -wait tcp://localhost:3306 -timeout 1m
 
       - run:
-          name: install dependencies
+          name: Install dependencies
           command: bundle install --jobs=4 --retry=3 --path vendor/bundle
 
       - run:
-          name: run tests
+          name: Run tests
           command: bundle exec rake
 
   deploy:
