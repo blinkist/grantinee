@@ -2,6 +2,10 @@
 
 Grantinee is a library to manage your database permissions. It supports MySQL and Postgres, allowing for granular per-table, and per-column permission setting. Tight and explicit permissions, instead of "allow all access" approach, may enhance the data security in your app, and make the GDPR compliance easier for multi-user databases (like when you have a service-oriented architecture).
 
+[![Gem Version](https://badge.fury.io/rb/grantinee.svg)](https://badge.fury.io/rb/grantinee)
+[![CircleCI](https://circleci.com/gh/blinkist/grantinee/tree/master.svg?style=svg&circle-token=be47ddf3e39aa44795797ae40c06bd42144ad888)](https://circleci.com/gh/blinkist/grantinee/tree/master)
+
+
 ## Installation
 
 Add this line to your application's Gemfile:

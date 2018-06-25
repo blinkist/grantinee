@@ -1,8 +1,9 @@
 version: 2
+
 jobs:
   build:
     docker:
-      - image: circleci/ruby:2.4.1-node-browsers
+      - image: circleci/ruby:2.5.1-node-browsers
       - image: circleci/postgres:9.6.2-alpine
         environment:
           POSTGRES_USER: postgres
@@ -24,9 +25,42 @@ jobs:
           command: dockerize -wait tcp://localhost:3306 -timeout 1m
 
       - run:
-          name: install dependencies
+          name: Install dependencies
           command: bundle install --jobs=4 --retry=3 --path vendor/bundle
 
       - run:
-          name: run tests
+          name: Run tests
           command: bundle exec rake
+
+  deploy:
+    docker:
+      - image: circleci/ruby:2.5.1-node-browsers
+    steps:
+      - checkout
+
+      - run:
+          name: Setup Rubygems
+          command: bash .circleci/setup-rubygems.sh
+
+      - run:
+          name: Publish to Rubygems
+          command: |
+            gem build grantinee.gemspec
+            gem push "grantinee-$(git describe --tags | cut -c2-).gem"
+
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - build:
+          filters:
+            tags:
+              only: /.*/
+      - deploy:
+          requires:
+            - build
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
