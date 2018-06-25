@@ -24,7 +24,7 @@ module Grantinee
 
       def revoke_permissions!(data)
         database = sanitize_column_name(data[:database])
-        user     = sanitize_column_name(data[:database])
+        user     = sanitize_column_name(data[:user])
 
         query = "REVOKE ALL PRIVILEGES ON DATABASE #{database} FROM #{user};"
         run! query, data

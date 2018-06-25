@@ -70,7 +70,7 @@ module Grantinee
         before do
           expect(client).to receive(:escape_string) do |string|
             string
-          end
+          end.at_least(1).times
         end
 
         it "revokes all privileges for the user" do
