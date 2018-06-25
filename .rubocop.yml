@@ -9,7 +9,7 @@ Lint/HandleExceptions:
   Enabled: false
   
 Metrics/AbcSize:
-  Max: 18
+  Max: 20
 
 Metrics/BlockLength:
   Exclude:
