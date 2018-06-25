@@ -6,7 +6,7 @@ require "yaml"
 module MysqlHelpers
   class Mysql
     def initialize(user: nil, password: nil, database: nil)
-      require "./spec/fixtures/config_mysql"
+      load "./spec/fixtures/config_mysql.rb"
 
       @client = Mysql2::Client.new(
         username: user,

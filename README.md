@@ -22,11 +22,25 @@ Or install it yourself as:
 
 Before you start using Grantinee you need to configure it.
 
-### Configure the connection with database
+### User ActiveRecord connection (Rails)
 
-Using Rails? Woop woop, you don't have to do anything more! Grantinee is plug-and-play, as long as your database.yml user has granting permissions (probably doesn't, though).
+As long as you use Grantinee's executable, everything is plug-and-play. Just make sure that you operate in the right environment, and your database user has granting rights (most likely it won't have them for security reasons). Simply run:
 
-You can specify connection in a block, providing each information separately:
+    $ RAILS_ENV=production bundle exec grantinee
+
+If you'd like to use Grantinee programmatically as a library, you will need to create two things:
+
+```ruby
+# Create or pass an existing logger
+Grantinee.logger = ::Logger.new(STDOUT)
+
+# (optional) Manually call ActiveRecord detection
+Grantinee::Engine.detect_active_record_connection!
+```
+
+### Custom database connection
+
+You may create an initializer, providing each information separately:
 
 ```ruby
 Grantinee.configure do |c|
@@ -49,20 +63,26 @@ Grantinee.configure do |c|
 end
 ```
 
-In case you do not want to or cannot use an initializer, you can save your configuration in a YAML file:
+In case you do not want to or cannot use an initializer, you can save your configuration in a standalone ruby file, which you pass as an argument in the command line, i.e.:
 
-```yaml
-engine:    mysql
-username:  root
-password:  password
-hostname:  localhost
-port:      3306
-database:  database_name
+    $ grantinee -c ./config/grantinee.yml
+
+### Command line options
+
+Grantinee provides flexible configuration options through the command line parameters, you can easily review them, by running:
+
+    $ grantinee --help
+
+```
+Usage: grantinee [options]
+    -h, --help                       Displays help
+    -v, --verbosity=LEVEL            Set verbosity level to debug, info, warn, error, fatal, or unknown (default: warning)
+    -r, --require=FILE               Application boot file path (default: ./config/environment.rb)
+    -f, --file=FILE                  Permission definitions file path (default: ./Grantinee)
+    -c, --config=FILE                Database configuration file path
 ```
 
-You can use it then by providing the command line argument, i.e. `grantinee -c config/grantinee.yml`
-
-### Permissions definition
+## Permissions definition
 
 You can use the DSL to quickly set up your permissions:
 

@@ -3,7 +3,7 @@
 require "spec_helper"
 require "support/shared_contexts/mysql_database"
 require "support/shared_contexts/postgresql_database"
-require "support/shared_contexts/permissions_file"
+require "support/shared_contexts/permissions"
 require "support/query_helpers"
 
 def db_error_args
@@ -13,15 +13,33 @@ def db_error_args
   }
 end
 
-RSpec.describe "Adding permissions" do
+# NOTE: because of the RIDICULOUS nature of how I built the permissions helper,
+# permissions need to be defined by themselves per line, i.e.
+#
+# TODO: refactor this :)
+#
+# BAD:
+#   let(:permissions) { -> { update :users } }
+#
+# GOOD:
+#   let(:permissions) do
+#     -> { update :users }
+#   end
+#
+RSpec.describe "DSL specs" do
   include QueryHelpers
 
-  context "when a permissions file exists with defined permissions" do
-    subject { `exe/grantinee -f #{permissions_file} #{config}` }
+  context "when a the dsl gets passed permissions" do
+    subject { Grantinee::Executor.new(dsl, engine).run! }
 
-    let(:users) { ["my_user"] }
+    let(:dsl) { Grantinee::Dsl.eval(permissions_code) }
+    let(:engine) { Grantinee::Engine.for(db_type) }
 
-    include_context "permissions file"
+    include_context "permissions"
+
+    before do
+      allow(Grantinee).to receive(:logger).and_return(::Logger.new($stderr))
+    end
 
     %i[mysql postgresql].each do |db_type|
       context "for #{db_type}" do
@@ -154,6 +172,65 @@ RSpec.describe "Adding permissions" do
 
               it "can delete records" do
                 expect { query(db_type, :delete) }.not_to raise_error
+              end
+            end
+
+            if context_users.count == 2
+              context "when one user can only select, and one can only update" do
+                let(:user_1) { context_users[0] }
+                let(:user_2) { context_users[1] }
+                let(:permissions) do
+                  lambdas = []
+                  lambdas.push(
+                    -> { select :users, %i[id anonymized] }
+                  )
+                  lambdas.push(
+                    -> { update :users }
+                  )
+                  lambdas
+                end
+
+                describe "the first user" do
+                  # the database helpers rely on `user` first, then `users.first`
+                  let(:user) { user_1 }
+
+                  it "cannot insert records" do
+                    expect { query(db_type, :insert) }.to raise_error(*raised_error_args)
+                  end
+
+                  it "can select records" do
+                    expect { query(db_type, :select) }.not_to raise_error
+                  end
+
+                  it "cannot update records" do
+                    expect { query(db_type, :update) }.to raise_error(*raised_error_args)
+                  end
+
+                  it "cannot delete records" do
+                    expect { query(db_type, :delete) }.to raise_error(*raised_error_args)
+                  end
+                end
+
+                describe "the second user" do
+                  # the database helpers rely on `user` first, then `users.first`
+                  let(:user) { user_2 }
+
+                  it "cannot insert records" do
+                    expect { query(db_type, :insert) }.to raise_error(*raised_error_args)
+                  end
+
+                  it "cannot select records" do
+                    expect { query(db_type, :select) }.to raise_error(*raised_error_args)
+                  end
+
+                  it "can update records" do
+                    expect { query(db_type, :update) }.not_to raise_error
+                  end
+
+                  it "cannot delete records" do
+                    expect { query(db_type, :delete) }.to raise_error(*raised_error_args)
+                  end
+                end
               end
             end
           end

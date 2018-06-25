@@ -6,7 +6,7 @@ require "yaml"
 module PostgresqlHelpers
   class Postgresql
     def initialize(user: nil, password: nil, database: nil)
-      require "./spec/fixtures/config_postgresql"
+      load "./spec/fixtures/config_postgresql.rb"
 
       @client = PG::Connection.open(
         user:     user,

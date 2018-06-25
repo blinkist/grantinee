@@ -3,24 +3,20 @@
 require "spec_helper"
 require "support/permissions_helpers"
 
-RSpec.shared_context "permissions" do
+RSpec.shared_context "permissions file" do
   let(:permissions_file) { defined?(super()) ? super() : "Grantinee.test" }
   let(:database) { defined?(super()) ? super() : "grantinee_test" }
-  let(:users) { defined?(super()) ? super() : %w[dude dudette] }
+  let(:users) { defined?(super()) ? super() : ["dude"] }
 
   # NOTE: default permissions
   let(:permissions) do
-    lambdas = []
-    lambdas.push(
-      -> { select :users, %i[id anonymized] }
-    )
-    lambdas.push(
-      -> { select :users, %i[id anonymized email.primary] }
-    )
-    lambdas
+    [-> { select :users, %i[id anonymized] }]
   end
 
   let(:permissions_code) do
     Permissions::Code.for(users, permissions, database: database)
   end
+
+  before { IO.write("./#{permissions_file}", permissions_code) }
+  after { `rm ./#{permissions_file}` }
 end

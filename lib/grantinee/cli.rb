@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Grantinee
   class CLI
     attr_accessor :options
@@ -83,7 +85,7 @@ module Grantinee
     end
 
     def build_dsl
-      Grantinee.logger = @logger
+      Grantinee.configuration.logger = @logger
       Grantinee::Dsl.eval(File.read(@options[:file]))
     end
 
@@ -100,14 +102,19 @@ module Grantinee
       if @options[:require]
         require @options[:require]
       elsif defined?(Rails)
-        Grantinee::Engine.detect_active_record_connection!
+        require './config/environment'
       end
     end
 
     # Database configuration file
     def process_database_param
-      unless @options[:config]
-        raise "No configuration file found. Please use the -c option to pass a configuration file"
+      unless @options[:config] || Grantinee.configuration.configured?
+        Grantinee::Engine.detect_active_record_connection!
+
+        unless Grantinee.configuration.configured?
+          raise "No configuration file found. Please use the -c option"\
+                " to pass a configuration file."
+        end
       end
 
       require options[:config]

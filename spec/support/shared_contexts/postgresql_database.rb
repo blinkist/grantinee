@@ -9,10 +9,10 @@ RSpec.shared_context "postgresql database" do
 
   # NOTE: the actual client that we assign permissions for
   let(:postgresql_client) do
-    require "./spec/fixtures/config_postgresql"
+    load "./spec/fixtures/config_postgresql.rb"
 
     PG::Connection.open(
-      user:     user,
+      user:     (defined?(user) ? user : users.first),
       password: "fake_password",
       host:     Grantinee.configuration.hostname,
       port:     Grantinee.configuration.port,
@@ -21,11 +21,16 @@ RSpec.shared_context "postgresql database" do
   end
 
   before do
+    load "./spec/fixtures/config_postgresql.rb"
+
     options = { user: "postgres", password: "postgres" }
 
     pg_admin = PostgresqlHelpers::Postgresql.new(options)
     pg_admin.create_database(database)
-    pg_admin.create_role(user, "fake_password")
+    users.each do |user|
+      pg_admin.create_role(user, "fake_password")
+    end
+
     pg_admin.close
 
     db_admin = PostgresqlHelpers::Postgresql.new(options.merge(database: database))
