@@ -92,10 +92,22 @@ module Grantinee
             expect(Grantinee.configuration.database).to eq(ar_config[:database])
           end
 
-          it "sets the grantinee engine to the specified engine" do
-            subject
+          # NOTE: test that we set the engine to a proper AR adapter
+          {
+            mysql: %i[mysql mysql2],
+            postgresql: %i[postgresql pg]
+          }.each do |engine, adapters|
+            adapters.each do |ar_adapter|
+              context "when the AR adapter is set to #{ar_adapter}" do
+                let(:adapter) { ar_adapter }
 
-            expect(Grantinee.configuration.engine).to eq(adapter.to_sym)
+                it "sets the grantinee engine to #{engine}" do
+                  subject
+
+                  expect(Grantinee.configuration.engine).to eq(engine)
+                end
+              end
+            end
           end
         end
       end
