@@ -32,6 +32,8 @@ module Grantinee
         raise 'Invalid database url'
       end
 
+      raise 'Invalid database url' unless uri.user && uri.host && uri.path
+
       @username = uri.user
       @password = uri.password
       @hostname = uri.host
