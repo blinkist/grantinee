@@ -7,8 +7,8 @@ require "grantinee/version"
 Gem::Specification.new do |spec|
   spec.name          = "grantinee"
   spec.version       = Grantinee::VERSION
-  spec.authors       = ["Paweł Komarnicki"]
-  spec.email         = ["pawel@blinkist.com"]
+  spec.authors       = ["Paweł Komarnicki", "John Donner"]
+  spec.email         = ["pawel@blinkist.com", "john@blinkist.com"]
 
   spec.summary       = '"Your permissions, freshly baked!" | A library to manage your database permissions for MySQL and Postgres'
   spec.description   = "A Ruby library to manage your database permissions for MySQL and PostgreSQL. Supports per-table, and per-column permissions for granular access and security."
