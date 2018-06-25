@@ -31,9 +31,9 @@ module Grantinee
       end
 
       def grant_permission!(data)
-        raise "Invalid permission kind" unless WHITELISTED_KINDS.include?(data[:kind])
+        raise "Invalid permission kind" unless WHITELISTED_KINDS.include?(data[:kind]&.downcase)
 
-        kind   = data[:kind]
+        kind   = data[:kind]&.upcase
         table  = sanitize_table_name(data[:table])
         user   = sanitize_column_name(data[:user])
         fields = data[:fields].map { |v| sanitize_column_name(v.to_s) }.join(', ')
