@@ -1,0 +1,5 @@
+on "grantinee_test" do
+  user :username do
+    select :users, [ :id, :anonymized ]
+  end
+end

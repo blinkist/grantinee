@@ -108,9 +108,19 @@ module Grantinee
 
     # Database configuration file
     def process_database_param
-      require options[:config] if options[:config]
+      unless @options[:config] || Grantinee.configuration.configured?
+        Grantinee::Engine.detect_active_record_connection!
 
-      Grantinee::Engine.detect_active_record_connection! unless Grantinee.configuration.configured?
+        unless Grantinee.configuration.configured?
+          raise "No configuration file found. Please use the -c option"\
+                " to pass a configuration file."
+        end
+      end
+
+      require options[:config]
+    rescue StandardError, LoadError => error
+      puts error
+      exit
     end
 
     # Grantinee file
