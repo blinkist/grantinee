@@ -126,7 +126,6 @@ RSpec.describe "DSL specs" do
               end
             end
 
-            # TODO: delete records
             context "when the user can delete records from a table" do
               let(:permissions) do
                 context_users.map do
