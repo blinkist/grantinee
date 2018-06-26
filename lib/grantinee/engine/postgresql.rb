@@ -30,7 +30,7 @@ module Grantinee
         run! query, data
       end
 
-      def grant_permission!(data) # rubocop:disable Metrics/AbcSize
+      def grant_permission!(data)
         raise "Invalid permission kind" unless WHITELISTED_KINDS.include?(data[:kind]&.downcase)
 
         kind   = data[:kind]&.upcase

@@ -10,9 +10,9 @@ Layout/EndAlignment:
 
 Lint/HandleExceptions:
   Enabled: false
-  
+
 Metrics/AbcSize:
-  Max: 20
+  Enabled: false
 
 Metrics/BlockLength:
   Exclude:
