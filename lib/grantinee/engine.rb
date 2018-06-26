@@ -4,7 +4,7 @@ module Grantinee
   module Engine
     SUPPORTED_ENGINES = %w[mysql postgresql].freeze
 
-    WHITELISTED_KINDS = %w[all usage select update insert].freeze
+    WHITELISTED_KINDS = %w[all usage select update insert delete execute].freeze
 
     class << self
       # Get appropriate engine class for the engine name

@@ -39,7 +39,8 @@ module Grantinee
         fields = data[:fields].map { |v| sanitize_column_name(v.to_s) }.join(', ')
 
         query = if data[:fields].empty?
-                  "GRANT #{kind} ON #{table} TO #{user};"
+                  type_helper = kind == "EXECUTE" ? " FUNCTION " : ""
+                  "GRANT #{kind} ON #{type_helper}#{table} TO #{user};"
                 else
                   "GRANT #{kind}(#{fields}) ON TABLE #{table} TO #{user};"
                 end
