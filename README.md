@@ -1,3 +1,5 @@
+![Grantinee](./grantinee.png)
+
 # Grantinee
 
 Grantinee is a library to manage your database permissions. It supports MySQL and Postgres, allowing for granular per-table, and per-column permission setting. Tight and explicit permissions, instead of "allow all access" approach, may enhance the data security in your app, and make the GDPR compliance easier for multi-user databases (like when you have a service-oriented architecture).
