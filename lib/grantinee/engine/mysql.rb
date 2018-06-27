@@ -33,7 +33,7 @@ module Grantinee
         run! query, data
       end
 
-      def grant_permission!(data) # rubocop:disable Metrics/AbcSize
+      def grant_permission!(data)
         raise "Invalid permission kind" unless WHITELISTED_KINDS.include?(data[:kind]&.downcase)
 
         database = sanitize_column_name(data[:database])
@@ -42,9 +42,10 @@ module Grantinee
         user     = sanitize_value(data[:user])
         host     = sanitize_value(data[:host])
         fields   = data[:fields].map { |v| sanitize_column_name(v.to_s) }.join(', ')
+        helper   = (kind == "EXECUTE" ? " PROCEDURE " : "")
 
         query = if data[:fields].empty?
-                  "GRANT #{kind} ON #{database}.#{table} TO '#{user}'@'#{host}';"
+                  "GRANT #{kind} ON #{helper}#{database}.#{table} TO '#{user}'@'#{host}';"
                 else
                   "GRANT #{kind}(#{fields}) ON #{database}.#{table} TO '#{user}'@'#{host}';"
                 end

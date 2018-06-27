@@ -108,7 +108,6 @@ RSpec.describe "Adding permissions" do
               end
             end
 
-            # TODO: delete records
             context "when the user can delete records from a table" do
               let(:permissions) do
                 context_users.map do
@@ -116,19 +115,19 @@ RSpec.describe "Adding permissions" do
                 end
               end
 
-              xit "cannot insert records" do
+              it "cannot insert records" do
                 expect { query(db_type, :insert) }.to raise_error(*raised_error_args)
               end
 
-              xit "cannot select records" do
+              it "cannot select records" do
                 expect { query(db_type, :select) }.to raise_error(*raised_error_args)
               end
 
-              xit "cannot update records" do
+              it "cannot update records" do
                 expect { query(db_type, :update) }.to raise_error(*raised_error_args)
               end
 
-              xit "can delete records" do
+              it "can delete records" do
                 expect { query(db_type, :delete) }.not_to raise_error
               end
             end
