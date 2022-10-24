@@ -1,4 +1,3 @@
-
 # frozen_string_literal: true
 
 require "yaml"
@@ -11,16 +10,16 @@ module MysqlHelpers
       @client = Mysql2::Client.new(
         username: user,
         password: password,
-        host:     Grantinee.configuration.hostname,
-        port:     Grantinee.configuration.port,
+        host: Grantinee.configuration.hostname,
+        port: Grantinee.configuration.port,
         database: database
       )
     end
 
     def create_database(database)
       @client.query "CREATE DATABASE #{database};"
-    rescue Mysql2::Error => error
-      puts error
+    rescue Mysql2::Error => e
+      puts e
     end
 
     def drop_database(database)
@@ -70,8 +69,8 @@ module MysqlHelpers
 
     def create_user_records
       @client.query "INSERT INTO users (id, anonymized) VALUES ('1234', false);"
-    rescue StandardError => error
-      puts error
+    rescue StandardError => e
+      puts e
     end
 
     def close

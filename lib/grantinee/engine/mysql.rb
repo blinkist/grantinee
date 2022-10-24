@@ -12,8 +12,8 @@ module Grantinee
         @connection = Mysql2::Client.new(
           username: configuration.username,
           password: configuration.password,
-          host:     configuration.hostname,
-          port:     configuration.port,
+          host: configuration.hostname,
+          port: configuration.port,
           database: configuration.database
         )
       end

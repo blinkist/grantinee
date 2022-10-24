@@ -2,9 +2,7 @@
 
 module Grantinee
   class CLI
-    attr_accessor :options
-    attr_accessor :dsl
-    attr_accessor :engine
+    attr_accessor :options, :dsl, :engine
 
     def initialize(args = ARGV, logger = ::Logger.new($stderr))
       @args    = args
@@ -118,8 +116,8 @@ module Grantinee
       end
 
       require options[:config]
-    rescue StandardError, LoadError => error
-      puts error
+    rescue StandardError, LoadError => e
+      puts e
       exit
     end
 
@@ -131,6 +129,7 @@ module Grantinee
     # Explicit verbose mode, overrides configuration value
     def process_verbosity_param
       return unless @options[:verbose]
+
       log_levels = %w[debug info warn error fatal unknown]
       @logger.level = log_levels.index(@options[:verbose])
     end

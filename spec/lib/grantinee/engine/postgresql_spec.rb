@@ -22,8 +22,8 @@ module Grantinee
           {
             user: "privileged_person",
             password: "secret",
-            host:     "172.0.0.1",
-            port:     5432,
+            host: "172.0.0.1",
+            port: 5432,
             dbname: "grantinee_test"
           }
         end

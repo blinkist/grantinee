@@ -49,8 +49,8 @@ module Grantinee
         logger.debug "Got table: #{table}, fields: #{fields}"
 
         @permissions << @data.merge(
-          kind:   kind,
-          table:  table,
+          kind: kind,
+          table: table,
           fields: fields
         )
       end

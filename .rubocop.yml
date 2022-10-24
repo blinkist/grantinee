@@ -8,7 +8,7 @@ Layout/CaseIndentation:
 Layout/EndAlignment:
   Enabled: false
 
-Lint/HandleExceptions:
+Lint/SuppressedException:
   Enabled: false
 
 Metrics/AbcSize:

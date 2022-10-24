@@ -1,4 +1,3 @@
-
 # frozen_string_literal: true
 
 require "yaml"
@@ -9,11 +8,11 @@ module PostgresqlHelpers
       load "./spec/fixtures/config_postgresql.rb"
 
       @client = PG::Connection.open(
-        user:     user,
+        user: user,
         password: password,
-        host:     Grantinee.configuration.hostname,
-        port:     Grantinee.configuration.port,
-        dbname:   database
+        host: Grantinee.configuration.hostname,
+        port: Grantinee.configuration.port,
+        dbname: database
       )
     end
 
