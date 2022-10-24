@@ -10,11 +10,11 @@ module Grantinee
         configuration = Grantinee.configuration
 
         @connection = PG::Connection.open(
-          user:     configuration.username,
+          user: configuration.username,
           password: configuration.password,
-          host:     configuration.hostname,
-          port:     configuration.port,
-          dbname:   configuration.database
+          host: configuration.hostname,
+          port: configuration.port,
+          dbname: configuration.database
         )
       end
 

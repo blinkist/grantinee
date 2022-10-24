@@ -7,14 +7,10 @@ module Grantinee
     # Which engine is used by the library?
     attr_accessor :engine
 
-    attr_accessor :logger
+    attr_accessor :logger, :password, :hostname, :port, :database
 
     # Connection parameters
     attr_accessor :username
-    attr_accessor :password
-    attr_accessor :hostname
-    attr_accessor :port
-    attr_accessor :database
     attr_reader :url
 
     # Allow verbose mode

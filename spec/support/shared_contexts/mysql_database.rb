@@ -14,8 +14,8 @@ RSpec.shared_context "mysql database" do
     Mysql2::Client.new(
       username: (defined?(user) ? user : users.first),
       password: "secret",
-      host:     Grantinee.configuration.hostname,
-      port:     Grantinee.configuration.port,
+      host: Grantinee.configuration.hostname,
+      port: Grantinee.configuration.port,
       database: Grantinee.configuration.database
     )
   end

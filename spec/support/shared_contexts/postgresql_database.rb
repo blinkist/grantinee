@@ -12,11 +12,11 @@ RSpec.shared_context "postgresql database" do
     load "./spec/fixtures/config_postgresql.rb"
 
     PG::Connection.open(
-      user:     (defined?(user) ? user : users.first),
+      user: (defined?(user) ? user : users.first),
       password: "fake_password",
-      host:     Grantinee.configuration.hostname,
-      port:     Grantinee.configuration.port,
-      dbname:   Grantinee.configuration.database
+      host: Grantinee.configuration.hostname,
+      port: Grantinee.configuration.port,
+      dbname: Grantinee.configuration.database
     )
   end
 
